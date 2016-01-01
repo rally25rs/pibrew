@@ -1,0 +1,8 @@
+{
+	"env": "dev",
+	"poll": 333,
+	"sensors": {
+		"one": "hlt",
+		"two": "mlt"
+	}
+}

@@ -1,0 +1,24 @@
+{
+  "name": "pibrew",
+  "version": "1.0.0",
+  "description": "Homebrew Automation for the Raspberry Pi",
+  "main": "src/pibrew.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rally25rs/pibrew.git"
+  },
+  "author": "Jeff Valore",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rally25rs/pibrew/issues"
+  },
+  "homepage": "https://github.com/rally25rs/pibrew#readme",
+  "dependencies": {
+    "ds18b20": "^0.1.0",
+    "lodash": "^3.10.1",
+    "minimist": "^1.2.0"
+  }
+}

@@ -54,3 +54,7 @@ exports.stop = function() {
 exports.temperatures = function() {
 	return temperatures;
 };
+
+exports.temperature = function(id) {
+	return temperatures[id] || 0;
+};

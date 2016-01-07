@@ -1,5 +1,9 @@
 {
 	"strict": true,
 	"node": true,
-	"quotmark": "single"
+	"quotmark": "single",
+	"predef": [
+		"describe",
+		"it"
+	]
 }

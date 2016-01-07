@@ -1,7 +1,7 @@
 'use strict';
 
-var INTEGRAL_SUM_MIN = -20;
-var INTEGRAL_SUM_MAX = 20;
+var INTEGRAL_SUM_MIN = -10;
+var INTEGRAL_SUM_MAX = 10;
 
 var temperatureReader = require('./temperature-reader');
 
@@ -19,19 +19,19 @@ Pid.prototype.update = function() {
 	var position = temperatureReader.temperature(this._tempSensorId);
 	var error = this.setPoint - position;
 
-	var proportioonalComponent = this._proportional(position, error);
-	var integralComponent = this._integral(position, error);
-	var differentialComponent = this._differential(position, error);
+	var proportioonalComponent = this._proportional(error);
+	var integralComponent = this._integral(error);
+	var differentialComponent = this._differential(position);
 
 	this.value = proportioonalComponent + integralComponent + differentialComponent;
 	return this.value;
 };
 
-Pid.prototype._proportional = function(position, error) {
+Pid.prototype._proportional = function(error) {
 	return this._proportionalGain * error;
 };
 
-Pid.prototype._integral = function(position, error) {
+Pid.prototype._integral = function(error) {
 	this._integratorSum += error;
 
 	if(this._integratorSum > INTEGRAL_SUM_MAX) {
@@ -43,7 +43,7 @@ Pid.prototype._integral = function(position, error) {
 	return this._integralGain * this._integratorSum;
 };
 
-Pid.prototype._differential = function(position, error) {
+Pid.prototype._differential = function(position) {
 	var differentialComponent;
 
 	if(this._differentialPrevious === undefined) {

@@ -92,7 +92,6 @@ describe('PID Controller', function() {
 			if(pidOutputs.length === 5) {
 				currentTemperature += (pidOutputs.shift() * 0.1);
 			}
-			console.log(lastPidOutput, currentTemperature);
 		}
 
 		expect(currentTemperature).to.be.lessThan(setPoint + 1);

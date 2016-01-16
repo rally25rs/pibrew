@@ -1,8 +1,7 @@
 {
 	"env": "dev",
-	"poll": 333,
+	"poll": 5000,
 	"sensors": {
-		"one": "hlt",
-		"two": "mlt"
+		"28-011564c2ffff": "hlt"
 	}
 }

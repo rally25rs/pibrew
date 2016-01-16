@@ -29,13 +29,22 @@ function _saveSensors(err, ids) {
 }
 
 function _saveTemperature(id, err, value) {
+	var degreesFahrenheit;
+
 	if(err) {
 		// todo: log
 		temperatures[config.sensors[id]] = 0;
 	} else {
-		temperatures[config.sensors[id]] = value;
-		console.log('Temp of sensor [' + config.sensors[id] + '] = ' + value);
+		degreesFahrenheit = _celciusToFahrenheit(value);
+		temperatures[config.sensors[id]] = degreesFahrenheit;
+		console.log('Temp of sensor [' + config.sensors[id] + '] = ' + degreesFahrenheit);
 	}
+}
+
+function _celciusToFahrenheit(degreesCelcius) {
+	var degreesFahrenheit = degreesCelcius * 1.8 + 32;
+	degreesFahrenheit = Math.round(degreesFahrenheit * 10) / 10;
+	return degreesFahrenheit;
 }
 
 exports.start = function(pollTimeMS) {

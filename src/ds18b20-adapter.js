@@ -1,11 +1,10 @@
 'use strict';
 
-var config = './config';
+var config = require('./config');
 
 if(config.env === 'prod') {
-	var ds18b20 = require('ds18b20');
+	module.exports = require('ds18b20');
 } else {
-	var ds18b20 = require('./mock/ds18b20');
+	console.log('Using mock temperatures.');
+	module.exports = require('./mock/ds18b20');
 }
-
-module.exports = ds18b20;

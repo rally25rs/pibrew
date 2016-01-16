@@ -1,11 +1,10 @@
 'use strict';
 
-var config = './config';
+var config = require('./config');
 
 if(config.env === 'prod') {
-	var gpio = require('pi-gpio');
+	module.exports = require('pi-gpio');
 } else {
-	var gpio = require('./mock/pi-gpio');
+	console.log('Using mock gpio.');
+	module.exports = require('./mock/pi-gpio');
 }
-
-module.exports = gpio;

@@ -2,8 +2,11 @@
 	"strict": true,
 	"node": true,
 	"quotmark": "single",
+	"esnext": true,
 	"predef": [
 		"describe",
-		"it"
+		"it",
+		"beforeEach",
+		"afterEach"
 	]
 }

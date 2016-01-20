@@ -14,3 +14,6 @@ exports.getDirection = function(pinNumber, callback) {
 
 exports.read = function (pinNumber, callback) {
 };
+
+exports.write = function(pinNumber, value, callback) {
+};

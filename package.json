@@ -4,7 +4,7 @@
   "description": "Homebrew Automation for the Raspberry Pi",
   "main": "src/pibrew.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,8 @@
     "grunt-koa": "^1.0.0",
     "grunt-mocha-test": "^0.12.7",
     "mocha": "^2.3.4",
-    "proxyquire": "^1.7.3"
+    "proxyquire": "^1.7.3",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0"
   }
 }

@@ -29,7 +29,6 @@ module.exports = class {
 	}
 
 	start() {
-		debugger;
 		this._configuration.gpio.open(this._configuration.gpioPin, 'outbound');
 	}
 

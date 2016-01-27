@@ -66,7 +66,7 @@ describe('RelayController', function() {
 			mockGpioAdapter.verify();
 		});
 
-		it('"off" activates gpio pin', function() {
+		it('"off" deactivates gpio pin', function() {
 			const gpioPin = 2;
 			const mockPid = function() {
 				this.update = function() {

@@ -1,10 +1,10 @@
 'use strict';
 
-var minimist = require('minimist');
-var _ = require('lodash');
-var configFile = require('../config.json');
+const minimist = require('minimist');
+const _ = require('lodash');
+const configFile = require('../config.json');
 
-var defaults = {
+const defaults = {
 	env: 'prod',
 	poll: 333,
 	sensors: {}

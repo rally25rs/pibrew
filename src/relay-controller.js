@@ -1,58 +1,60 @@
 'use strict';
 
-var _ = require('lodash');
-var Pid = require('./pid');
+const _ = require('lodash');
+const Pid = require('./pid');
 
-var defaultConfiguration = {
+const defaultConfiguration = Object.freeze({
 	setPoint: 0,
 	// tempSensorId: undefined,
 	// proportionalGain: 0.2,
 	// integralGain: 0.2,
 	// differentialGain: 5,
+	gpio: undefined,
 	gpioPin: 17
-};
+});
 
-var RelayController = function(configuration) {
-	this._mode = 'off';
-	this._configuration = _.extend(defaultConfiguration, configuration || {});
-	this._active = false;
-};
-
-RelayController.prototype._onModeChanged = function() {
-	if(this._mode === 'on') {
-		this._configuration.gpio.write(this._configuration.gpioPin, 1);
-	} else if(this._mode === 'off') {
-		this._configuration.gpio.write(this._configuration.gpioPin, 0);
+module.exports = class {
+	constructor(configuration) {
+		this._mode = 'off';
+		this._configuration = _.extend({}, defaultConfiguration, configuration || {});
+		this._active = false;
 	}
-};
 
-RelayController.prototype.start = function() {
-	this._configuration.gpio.open(this._configuration.gpioPin, 'outbound');
-};
-
-RelayController.prototype.stop = function() {
-	this._configuration.gpio.close(this._configuration.gpioPin, function(error) {
-		if(error) {
-			this._mode = 'error';
+	_onModeChanged() {
+		if(this._mode === 'on') {
+			this._configuration.gpio.write(this._configuration.gpioPin, 1);
+		} else if(this._mode === 'off') {
+			this._configuration.gpio.write(this._configuration.gpioPin, 0);
 		}
-	});
-};
-
-RelayController.prototype.mode = function(newMode) {
-	if(newMode) {
-		this._mode = newMode;
-		this._onModeChanged();
 	}
-	return this._mode;
-};
 
-RelayController.prototype.active = function() {
-	return this._active;
-};
+	start() {
+		debugger;
+		this._configuration.gpio.open(this._configuration.gpioPin, 'outbound');
+	}
 
-RelayController.prototype.update = function() {
-	var pidValue = this._configuration._pid.update();
-	this._active = pidValue < this._configuration.setPoint + 0.5;
-};
+	stop() {
+		this._configuration.gpio.close(this._configuration.gpioPin, function(error) {
+			if(error) {
+				this._mode = 'error';
+			}
+		});
+	}
 
-module.exports = RelayController;
+	mode(newMode) {
+		if(newMode) {
+			this._mode = newMode;
+			this._onModeChanged();
+		}
+		return this._mode;
+	}
+
+	active() {
+		return this._active;
+	}
+
+	update() {
+		var pidValue = this._configuration._pid.update();
+		this._active = pidValue < this._configuration.setPoint + 0.5;
+	}
+};

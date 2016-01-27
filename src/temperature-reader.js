@@ -1,69 +1,72 @@
 'use strict';
 
-var _ = require('lodash');
-var config = require('./config');
-var sensorsAdapter = require('./ds18b20-adapter');
+const _ = require('lodash');
 
-var pollTIme;
-var timerId;
-var temperatures = {};
-var sensorIds = [];
+module.exports = class {
+	constructor(sensorsAdapter) {
+		this._pollTIme = undefined;
+		this._timerId = undefined;
+		this._temperatures = {};
+		this._sensorIds = [];
+		this._sensorsAdapter = sensorsAdapter;
+	}
 
-function _readTemperatures() {
-	_.each(sensorIds, function(sensorId) {
-		console.log('Getting temp for sensor ' + sensorId);
-		sensorsAdapter.temperature(sensorId, function(err, value) {
-			_saveTemperature(sensorId, err, value);
+	_readTemperatures() {
+		_.each(this._sensorIds, (sensorId) => {
+			console.log('Getting temp for sensor ' + sensorId);
+			this._sensorsAdapter.temperature(sensorId, (err, value) => {
+				this._saveTemperature(sensorId, err, value);
+			});
 		});
-	});
 
-	timerId = setTimeout(_readTemperatures, pollTIme);
-}
-
-function _saveSensors(err, ids) {
-	if(err) {
-		//todo:log
-	} else {
-		sensorIds = ids;
+		this._timerId = setTimeout(this._readTemperatures.bind(this), this._pollTIme);
 	}
-}
 
-function _saveTemperature(id, err, value) {
-	var degreesFahrenheit;
-
-	if(err) {
-		// todo: log
-		temperatures[config.sensors[id]] = 0;
-	} else {
-		degreesFahrenheit = _celciusToFahrenheit(value);
-		temperatures[config.sensors[id]] = degreesFahrenheit;
-		console.log('Temp of sensor [' + config.sensors[id] + '] = ' + degreesFahrenheit);
+	_saveSensors(err, ids) {
+		if(err) {
+			//todo:log
+		} else {
+			this._sensorIds = ids;
+		}
 	}
-}
 
-function _celciusToFahrenheit(degreesCelcius) {
-	var degreesFahrenheit = degreesCelcius * 1.8 + 32;
-	degreesFahrenheit = Math.round(degreesFahrenheit * 10) / 10;
-	return degreesFahrenheit;
-}
+	_saveTemperature(id, err, value) {
+		var degreesFahrenheit;
 
-exports.start = function(pollTimeMS) {
-	pollTIme = pollTimeMS;
-	sensorIds = sensorsAdapter.sensors(function (err, ids) {
-		console.log('Got sensors');
-		_saveSensors(err, ids);
-		_readTemperatures();
-	});
-};
+		if(err) {
+			// todo: log
+			this._temperatures[id] = 0;
+		} else {
+			degreesFahrenheit = this._celciusToFahrenheit(value);
+			this._temperatures[id] = degreesFahrenheit;
+			console.log('Temp of sensor [' + id + '] = ' + degreesFahrenheit);
+		}
+	}
 
-exports.stop = function() {
-	clearTimeout(timerId);
-};
+	_celciusToFahrenheit(degreesCelcius) {
+		var degreesFahrenheit = degreesCelcius * 1.8 + 32;
+		degreesFahrenheit = Math.round(degreesFahrenheit * 10) / 10;
+		return degreesFahrenheit;
+	}
 
-exports.temperatures = function() {
-	return temperatures;
-};
+	start(pollTimeMS) {
+		this._pollTIme = pollTimeMS;
+		var self = this;
+		this._sensorIds = this._sensorsAdapter.sensors((err, ids) => {
+			this._saveSensors(err, ids);
+			this._readTemperatures();
+		});
+	}
 
-exports.temperature = function(id) {
-	return temperatures[id] || 0;
+	stop() {
+		clearTimeout(this._timerId);
+	}
+
+	temperatures() {
+		return this._temperatures;
+	}
+
+	temperature(id) {
+		return this._temperatures[id] || 0;
+	}
 };

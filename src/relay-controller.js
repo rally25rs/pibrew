@@ -4,11 +4,6 @@ const _ = require('lodash');
 const Pid = require('./pid');
 
 const defaultConfiguration = Object.freeze({
-	setPoint: 0,
-	// tempSensorId: undefined,
-	// proportionalGain: 0.2,
-	// integralGain: 0.2,
-	// differentialGain: 5,
 	gpio: undefined,
 	gpioPin: 17
 });
@@ -50,10 +45,5 @@ module.exports = class {
 
 	active() {
 		return this._active;
-	}
-
-	update() {
-		var pidValue = this._configuration._pid.update();
-		this._active = pidValue < this._configuration.setPoint + 0.5;
 	}
 };

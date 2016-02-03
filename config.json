@@ -3,5 +3,18 @@
 	"poll": 5000,
 	"sensors": {
 		"28-011564c2ffff": "hlt"
-	}
+	},
+	"devices": [{
+		"name": "HTL",
+		"setPoint": 100,
+		"pid": {
+			"tempSensorId": "28-011564c2ffff",
+			"proportionalGain": 0.2,
+			"integralGain": 0.2,
+			"differentialGain": 2,
+		},
+		"relay": {
+			"gpioPin": 1
+		}
+	}]
 }

@@ -12,7 +12,7 @@ module.exports = class {
 	}
 
 	_readTemperatures() {
-		_.each(this._sensorIds, (sensorId) => {
+		this._sensorIds.forEach((sensorId) => {
 			console.log('Getting temp for sensor ' + sensorId);
 			this._sensorsAdapter.temperature(sensorId, (err, value) => {
 				this._saveTemperature(sensorId, err, value);

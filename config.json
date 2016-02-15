@@ -1,11 +1,8 @@
 {
 	"env": "dev",
 	"poll": 5000,
-	"sensors": {
-		"28-011564c2ffff": "hlt"
-	},
 	"devices": [{
-		"name": "HTL",
+		"name": "HLT",
 		"setPoint": 100,
 		"pid": {
 			"tempSensorId": "28-011564c2ffff",
@@ -14,7 +11,7 @@
 			"differentialGain": 2,
 		},
 		"relay": {
-			"gpioPin": 1
+			"gpioPin": 26
 		}
 	}]
 }

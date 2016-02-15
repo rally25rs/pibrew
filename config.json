@@ -8,7 +8,7 @@
 			"tempSensorId": "28-011564c2ffff",
 			"proportionalGain": 0.2,
 			"integralGain": 0.2,
-			"differentialGain": 2,
+			"differentialGain": 2
 		},
 		"relay": {
 			"gpioPin": 26

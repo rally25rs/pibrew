@@ -4,6 +4,7 @@
   "description": "Homebrew Automation for the Raspberry Pi",
   "main": "src/pibrew.js",
   "scripts": {
+    "start": "node ./src/pibrew.js",
     "test": "mocha"
   },
   "repository": {
@@ -20,7 +21,8 @@
     "ds18b20": "^0.1.0",
     "koa": "^1.1.2",
     "lodash": "^3.10.1",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.0",
+    "pi-gpio": "0.0.8"
   },
   "devDependencies": {
     "chai": "^3.4.1",

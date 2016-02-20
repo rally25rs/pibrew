@@ -3,21 +3,20 @@
 const INTEGRAL_SUM_MIN = -10;
 const INTEGRAL_SUM_MAX = 10;
 
-const temperatureReader = require('./temperature-reader');
-
 module.exports = class {
-	constructor(setPoint, tempSensorId, proportionalGain, integralGain, differentialGain) {
+	constructor(setPoint, tempSensorId, proportionalGain, integralGain, differentialGain, temperatureReader) {
 		this._tempSensorId = tempSensorId;
 		this._proportionalGain = proportionalGain;
 		this._integralGain = integralGain;
 		this._differentialGain = differentialGain;
 		this._integratorSum = 0;
 		this._differentialPrevious = undefined;
+		this._temperatureReader = temperatureReader;
 		this.setPoint = setPoint;
 	}
 
 	update() {
-		var position = temperatureReader.temperature(this._tempSensorId);
+		var position = this._temperatureReader.temperature(this._tempSensorId);
 		var error = this.setPoint - position;
 
 		var proportioonalComponent = this._proportional(error);

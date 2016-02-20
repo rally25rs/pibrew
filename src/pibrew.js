@@ -1,16 +1,19 @@
 'use strict';
 
 const config = require('./config');
-const temperatureReader = require('./temperature-reader');
+const TemperatureReader = require('./temperature-reader');
 const gpio = require('./pi-gpio-adapter');
 const DeviceController = require('./device-controller');
+const sensorsAdapter = require('./ds18b20-adapter');
 
 var exiting = false;
 var devices = [];
 var deviceUpdateIntervalId;
+var temperatureReader = new TemperatureReader(sensorsAdapter);
 
 function _initializeDevice(deviceConfig) {
 	deviceConfig.relay.gpio = gpio;
+	deviceConfig.temperatureReader = temperatureReader;
 	var deviceController = new DeviceController(deviceConfig);
 	devices.push(deviceController);
 }

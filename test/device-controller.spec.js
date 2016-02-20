@@ -10,6 +10,12 @@ const gpio = require('../src/mock/pi-gpio');
 const proxyquire =  require('proxyquire');
 chai.use(sinonChai);
 
+const mockTemperatureReader = {
+	temperature: function() {
+		return 0;
+	}
+};
+
 describe('DeviceController', () => {
 	describe('update', () => {
 		it('enables relay if pid reports lower than setpoint', () => {
@@ -19,7 +25,8 @@ describe('DeviceController', () => {
 				relay: {
 					gpio: gpio,
 					gpioPin: 1
-				}
+				},
+				mockTemperatureReader: mockTemperatureReader
 			};
 
 			const mockPid = function() {
@@ -45,7 +52,8 @@ describe('DeviceController', () => {
 				relay: {
 					gpio: gpio,
 					gpioPin: 1
-				}
+				},
+				mockTemperatureReader: mockTemperatureReader
 			};
 
 			const mockPid = function() {
@@ -72,7 +80,8 @@ describe('DeviceController', () => {
 				relay: {
 					gpio: gpio,
 					gpioPin: 1
-				}
+				},
+				mockTemperatureReader: mockTemperatureReader
 			};
 
 			const mockPid = function() {
@@ -99,7 +108,8 @@ describe('DeviceController', () => {
 				relay: {
 					gpio: gpio,
 					gpioPin: 1
-				}
+				},
+				mockTemperatureReader: mockTemperatureReader
 			};
 
 			const mockPid = function() {

@@ -5,7 +5,8 @@ const Pid = require('./pid');
 
 const defaultConfiguration = Object.freeze({
 	gpio: undefined,
-	gpioPin: 17
+	gpioPin: 17,
+	verbose: false
 });
 
 module.exports = class {
@@ -37,6 +38,9 @@ module.exports = class {
 
 	mode(newMode) {
 		if(newMode) {
+			if(this._configuration.verbose) {
+				console.log(`Relay on GPIO ${this._configuration.gpioPin} set to ${newMode}.`);
+			}
 			this._mode = newMode;
 			this._onModeChanged();
 		}

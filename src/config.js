@@ -7,7 +7,7 @@ const configFile = require('../config.json');
 const defaults = {
 	env: 'prod',
 	poll: 333,
-	sensors: {}
+	devices: []
 };
 
 module.exports = _.extend(defaults, configFile, minimist(process.argv.slice(2)));

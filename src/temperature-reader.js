@@ -35,6 +35,7 @@ module.exports = class {
 
 		if(err) {
 			// todo: log
+			console.error(`Error getting temperature got sensor id ${id}; ${err}`);
 			this._temperatures[id] = 0;
 		} else {
 			degreesFahrenheit = this._celciusToFahrenheit(value);

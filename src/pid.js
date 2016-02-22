@@ -1,14 +1,21 @@
 'use strict';
 
+const _ = require('lodash');
+
 const INTEGRAL_SUM_MIN = -10;
 const INTEGRAL_SUM_MAX = 10;
 
+const defaults = Object.freeze({
+	tempSensorId: undefined,
+	proportionalGain: 0,
+	integralGain: 0,
+	differentialGain: 0,
+	verbose: false
+});
+
 module.exports = class {
-	constructor(setPoint, tempSensorId, proportionalGain, integralGain, differentialGain, temperatureReader) {
-		this._tempSensorId = tempSensorId;
-		this._proportionalGain = proportionalGain;
-		this._integralGain = integralGain;
-		this._differentialGain = differentialGain;
+	constructor(setPoint, temperatureReader, configuration) {
+		this._configuration = _.extend({}, defaults, configuration);
 		this._integratorSum = 0;
 		this._differentialPrevious = undefined;
 		this._temperatureReader = temperatureReader;
@@ -16,19 +23,22 @@ module.exports = class {
 	}
 
 	update() {
-		var position = this._temperatureReader.temperature(this._tempSensorId);
+		var position = this._temperatureReader.temperature(this._configuration.tempSensorId);
 		var error = this.setPoint - position;
 
-		var proportioonalComponent = this._proportional(error);
+		var proportionalComponent = this._proportional(error);
 		var integralComponent = this._integral(error);
 		var differentialComponent = this._differential(position);
 
-		this.value = proportioonalComponent + integralComponent + differentialComponent;
+		if(this._configuration.verbose) {
+			console.log(`position: ${position}, proportionalComponent: ${proportionalComponent}, integralComponent: ${integralComponent}, differentialComponent: ${differentialComponent}`);
+		}
+		this.value = proportionalComponent + integralComponent + differentialComponent;
 		return this.value;
 	}
 
 	_proportional(error) {
-		return this._proportionalGain * error;
+		return this._configuration.proportionalGain * error;
 	}
 
 	_integral(error) {
@@ -40,7 +50,7 @@ module.exports = class {
 			this._integratorSum = INTEGRAL_SUM_MIN;
 		}
 
-		return this._integralGain * this._integratorSum;
+		return this._configuration.integralGain * this._integratorSum;
 	}
 
 	_differential(position) {
@@ -50,7 +60,7 @@ module.exports = class {
 			this._differentialPrevious = position;
 		}
 
-		differentialComponent = this._differentialGain * (position - this._differentialPrevious);
+		differentialComponent = this._configuration.differentialGain * (position - this._differentialPrevious);
 
 		this._differentialPrevious = position;
 		return differentialComponent;

@@ -25,15 +25,10 @@ module.exports = class {
 	}
 
 	start() {
-		this._configuration.gpio.open(this._configuration.gpioPin, 'outbound');
 	}
 
 	stop() {
-		this._configuration.gpio.close(this._configuration.gpioPin, function(error) {
-			if(error) {
-				this._mode = 'error';
-			}
-		});
+		this._configuration.gpio.unexport(this._configuration.gpioPin);
 	}
 
 	mode(newMode) {

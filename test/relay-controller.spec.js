@@ -19,30 +19,6 @@ describe('RelayController', function() {
 		mocks.restore();
 	});
 
-	describe('start', function() {
-
-		it('opens GPIO pin specified in configuration in output mode', function() {
-			const gpioPin = 2;
-			const mockPid = function() {
-				this.update = function() {
-					return 0;
-				};
-			};
-
-			const mockGpioAdapter = mocks.mock(gpioAdapter);
-			mockGpioAdapter.expects('open').once().calledWith(gpioPin, 'output');
-
-			const relayController = new RelayController({
-				gpio: gpioAdapter,
-				gpioPin: gpioPin,
-				pid: mockPid
-			});
-			relayController.start();
-
-			mockGpioAdapter.verify();
-		});
-	});
-
 	describe('mode', function() {
 		it('"on" activates gpio pin', function() {
 			const gpioPin = 2;

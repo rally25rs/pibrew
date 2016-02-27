@@ -18,7 +18,7 @@ const mockTemperatureReader = {
 
 describe('DeviceController', () => {
 	describe('update', () => {
-		it('enables relay if pid reports lower than setpoint', () => {
+		it('enables relay if pid reports lower than 0', () => {
 			const deviceConfiguration = {
 				setPoint: 100,
 				pid: {},
@@ -31,7 +31,7 @@ describe('DeviceController', () => {
 
 			const mockPid = function() {
 				return {
-					update: function() { return 99; }
+					update: function() { return -1; }
 				};
 			};
 
@@ -45,7 +45,7 @@ describe('DeviceController', () => {
 			expect(deviceController._relayController.mode()).to.equal('on');
 		});
 
-		it('disables relay if pid reports higher than setpoint', () => {
+		it('disables relay if pid reports higher than 0', () => {
 			const deviceConfiguration = {
 				setPoint: 100,
 				pid: {},
@@ -58,7 +58,7 @@ describe('DeviceController', () => {
 
 			const mockPid = function() {
 				return {
-					update: function() { return 101; }
+					update: function() { return 1; }
 				};
 			};
 
@@ -72,7 +72,7 @@ describe('DeviceController', () => {
 			expect(deviceController._relayController.mode()).to.equal('off');
 		});
 
-		it('disables relay if pid reports lower than setpoint but within configured range', () => {
+		it('disables relay if pid reports lower than 0 but within configured range', () => {
 			const deviceConfiguration = {
 				setPoint: 100,
 				setPointRange: 0.5,
@@ -86,7 +86,7 @@ describe('DeviceController', () => {
 
 			const mockPid = function() {
 				return {
-					update: function() { return 99.6; }
+					update: function() { return -0.9; }
 				};
 			};
 
@@ -114,7 +114,7 @@ describe('DeviceController', () => {
 
 			const mockPid = function() {
 				return {
-					update: function() { return 100.4; }
+					update: function() { return 0.4; }
 				};
 			};
 

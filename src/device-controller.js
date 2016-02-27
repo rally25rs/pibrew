@@ -6,7 +6,7 @@ const RelayController = require('./relay-controller');
 
 const defaults = Object.freeze({
 	setPoint: 0,
-	setPointRange: 0,
+	setPointRange: .2,
 	temperatureReader: undefined
 });
 
@@ -29,7 +29,18 @@ module.exports = class {
 	update() {
 		var pidValue = this._pid.update();
 		console.log(`Pid value: ${pidValue}, SetPoint: ${this._configuration.setPoint}`);
-		this._active = pidValue < this._configuration.setPointRange;
-		this._relayController.mode(this._active ? 'on' : 'off');
+		var prevMode = this._relayController.mode();
+		var newMode = prevMode;
+		if(prevMode === 'on') {
+			if(pidValue < this._configuration.setPointRange * -1) {
+				newMode = 'off';
+			}
+		} else {
+			if(pidValue > this._configuration.setPointRange) {
+				newMode = 'on';
+			}
+		}
+		this._active = newMode === 'on';
+		this._relayController.mode(newMode);
 	}
 };

@@ -70,17 +70,17 @@ describe('PID Controller', function() {
 	});
 
 	describe('differential calculation', function() {
-		it('returns positive value when input is below setpoint', function() {
+		it('returns positive value when input is decreasing', function() {
 			var pid = new Pid(10, mockTemperatureReader, makeConfiguration('test', 0, 0, 2));
-			pid._differential(7);
-			var result = pid._differential(8);
+			pid._differential(8);
+			var result = pid._differential(7);
 			expect(result).is.greaterThan(0);
 		});
 
-		it('returns negative value when input is above setpoint', function() {
+		it('returns negative value when input is increasing', function() {
 			var pid = new Pid(10, mockTemperatureReader, makeConfiguration('test', 0, 0, 2));
-			pid._differential(13);
-			var result = pid._differential(12);
+			pid._differential(7);
+			var result = pid._differential(8);
 			expect(result).is.lessThan(0);
 		});
 	});

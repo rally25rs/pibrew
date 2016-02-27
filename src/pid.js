@@ -60,7 +60,7 @@ module.exports = class {
 			this._differentialPrevious = position;
 		}
 
-		differentialComponent = this._configuration.differentialGain * (position - this._differentialPrevious);
+		differentialComponent = this._configuration.differentialGain * (this._differentialPrevious - position);
 
 		this._differentialPrevious = position;
 		return differentialComponent;

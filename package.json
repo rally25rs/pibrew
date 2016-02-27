@@ -22,7 +22,7 @@
     "koa": "^1.1.2",
     "lodash": "^3.10.1",
     "minimist": "^1.2.0",
-    "pi-gpio": "https://github.com/rakeshpai/pi-gpio.git#gpioutil-fs-hybrid"
+    "pi-gpioutil": "0.0.3"
   },
   "devDependencies": {
     "chai": "^3.4.1",

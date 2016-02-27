@@ -25,6 +25,7 @@ module.exports = class {
 	}
 
 	start() {
+		this._configuration.gpio.export(this._configuration.gpioPin, 'out');
 	}
 
 	stop() {

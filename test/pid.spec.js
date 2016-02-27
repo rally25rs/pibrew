@@ -48,9 +48,9 @@ describe('PID Controller', function() {
 
 		it('increases return value when error is increasing', function() {
 			var pid = new Pid(10, mockTemperatureReader, makeConfiguration('test', 0, 2, 0));
-			pid._integral(5);
+			pid._integral(1);
 			var result1 = pid._integral(3);
-			var result2 = pid._integral(2);
+			var result2 = pid._integral(4);
 			expect(result1).is.lessThan(result2);
 		});
 

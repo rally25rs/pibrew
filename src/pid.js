@@ -2,8 +2,8 @@
 
 const _ = require('lodash');
 
-const INTEGRAL_SUM_MIN = -10;
-const INTEGRAL_SUM_MAX = 10;
+const INTEGRAL_SUM_MIN = -5;
+const INTEGRAL_SUM_MAX = 5;
 
 const defaults = Object.freeze({
 	tempSensorId: undefined,

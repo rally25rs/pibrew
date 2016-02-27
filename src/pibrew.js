@@ -26,11 +26,13 @@ function start() {
 	temperatureReader.start(config.poll);
 	config.devices.forEach(_initializeDevice);
 	deviceUpdateIntervalId = setInterval(_updateDevices, config.poll);
+	devices.forEach((device) => device.start());
 }
 
 function cleanup() {
-	temperatureReader.stop();
 	clearInterval(deviceUpdateIntervalId);
+	temperatureReader.stop();
+	devices.forEach((device) => device.stop());
 }
 
 function exit() {

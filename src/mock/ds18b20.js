@@ -2,7 +2,7 @@
 
 exports.sensors = function(callback) {
 	setTimeout(function() {
-		callback(undefined, ['one', 'two']);
+		callback(undefined, ['28-011564c2ffff']);
 	}, 0);
 };
 

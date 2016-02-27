@@ -17,11 +17,11 @@ module.exports = class {
 	}
 
 	_onModeChanged() {
-		if(this._mode === 'on') {
-			this._configuration.gpio.write(this._configuration.gpioPin, 1);
-		} else if(this._mode === 'off') {
-			this._configuration.gpio.write(this._configuration.gpioPin, 0);
+		const value = this._mode === 'on' ? 1 : 0;
+		if(this._configuration.verbose) {
+			console.log(`Relay on GPIO ${this._configuration.gpioPin} set to ${value}.`);
 		}
+		this._configuration.gpio.write(this._configuration.gpioPin, value);
 	}
 
 	start() {
@@ -33,9 +33,6 @@ module.exports = class {
 
 	mode(newMode) {
 		if(newMode) {
-			if(this._configuration.verbose) {
-				console.log(`Relay on GPIO ${this._configuration.gpioPin} set to ${newMode}.`);
-			}
 			this._mode = newMode;
 			this._onModeChanged();
 		}

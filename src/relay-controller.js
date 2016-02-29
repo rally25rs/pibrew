@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const Pid = require('./pid');
+const pinMap = require('./pin-map');
 
 const defaultConfiguration = Object.freeze({
 	gpio: undefined,
@@ -14,6 +15,10 @@ module.exports = class {
 		this._mode = 'off';
 		this._configuration = _.extend({}, defaultConfiguration, configuration || {});
 		this._active = false;
+		this._wiringPiPin = pinMap.gpioToWiringPi(this._configuration.gpioPin);
+		if(this._wiringPiPin === undefined) {
+			throw `GPIO pin ${this._configuration.gpioPin} is unavailable for use.`;
+		}
 	}
 
 	_onModeChanged() {

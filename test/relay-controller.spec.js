@@ -21,7 +21,7 @@ describe('RelayController', function() {
 
 	describe('mode', function() {
 		it('"on" activates gpio pin', function() {
-			const gpioPin = 2;
+			const gpioPin = 17;
 			const mockPid = function() {
 				this.update = function() {
 					return 0;
@@ -29,7 +29,7 @@ describe('RelayController', function() {
 			};
 
 			const mockGpioAdapter = mocks.mock(gpioAdapter);
-			mockGpioAdapter.expects('write').once().calledWith(gpioPin, 1);
+			mockGpioAdapter.expects('write').once().calledWith(0, 1);
 
 			const relayController = new RelayController({
 				gpio: gpioAdapter,
@@ -43,7 +43,7 @@ describe('RelayController', function() {
 		});
 
 		it('"off" deactivates gpio pin', function() {
-			const gpioPin = 2;
+			const gpioPin = 17;
 			const mockPid = function() {
 				this.update = function() {
 					return 0;
@@ -51,7 +51,7 @@ describe('RelayController', function() {
 			};
 
 			const mockGpioAdapter = mocks.mock(gpioAdapter);
-			mockGpioAdapter.expects('write').once().calledWith(gpioPin, 0);
+			mockGpioAdapter.expects('write').once().calledWith(0, 0);
 
 			const relayController = new RelayController({
 				gpio: gpioAdapter,

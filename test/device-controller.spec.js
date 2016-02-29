@@ -4,7 +4,6 @@ const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const expect = chai.expect;
-//const DeviceController = require('../src/device-controller');
 const RelayController = require('../src/relay-controller');
 const gpio = require('../src/mock/pi-gpio');
 const proxyquire =  require('proxyquire');
@@ -25,7 +24,7 @@ describe('DeviceController', () => {
 				pid: {},
 				relay: {
 					gpio: gpio,
-					gpioPin: 1
+					gpioPin: 17
 				},
 				mockTemperatureReader: mockTemperatureReader
 			};
@@ -53,7 +52,7 @@ describe('DeviceController', () => {
 				pid: {},
 				relay: {
 					gpio: gpio,
-					gpioPin: 1
+					gpioPin: 17
 				},
 				mockTemperatureReader: mockTemperatureReader
 			};
@@ -81,7 +80,7 @@ describe('DeviceController', () => {
 		// 		pid: {},
 		// 		relay: {
 		// 			gpio: gpio,
-		// 			gpioPin: 1
+		// 			gpioPin: 17
 		// 		},
 		// 		mockTemperatureReader: mockTemperatureReader
 		// 	};
@@ -109,7 +108,7 @@ describe('DeviceController', () => {
 		// 		pid: {},
 		// 		relay: {
 		// 			gpio: gpio,
-		// 			gpioPin: 1
+		// 			gpioPin: 17
 		// 		},
 		// 		mockTemperatureReader: mockTemperatureReader
 		// 	};

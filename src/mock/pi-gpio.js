@@ -13,5 +13,8 @@ exports.write = function(pinNumber, value, callback) {
 	}
 };
 
+exports.export = function() {
+};
+
 exports.unexport = function() {
 };

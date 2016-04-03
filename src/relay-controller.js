@@ -26,15 +26,15 @@ module.exports = class {
 		if(this._configuration.verbose) {
 			console.log(`Relay on GPIO ${this._configuration.gpioPin} set to ${value}.`);
 		}
-		this._configuration.gpio.write(this._configuration.gpioPin, value);
+		this._configuration.gpio.write(this._wiringPiPin, value);
 	}
 
 	start() {
-		this._configuration.gpio.export(this._configuration.gpioPin, 'out');
+		this._configuration.gpio.export(this._wiringPiPin, 'out');
 	}
 
 	stop() {
-		this._configuration.gpio.unexport(this._configuration.gpioPin);
+		this._configuration.gpio.unexport(this._wiringPiPin);
 	}
 
 	mode(newMode) {

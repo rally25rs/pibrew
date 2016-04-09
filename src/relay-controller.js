@@ -30,11 +30,11 @@ module.exports = class {
 	}
 
 	start() {
-		this._configuration.gpio.export(this._wiringPiPin, 'out');
+		this._configuration.gpio.export(this._configuration.gpioPin, 'out');
 	}
 
 	stop() {
-		this._configuration.gpio.unexport(this._wiringPiPin);
+		this._configuration.gpio.unexport(this._configuration.gpioPin);
 	}
 
 	mode(newMode) {

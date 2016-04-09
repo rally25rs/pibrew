@@ -3,11 +3,13 @@
 const _ = require('lodash');
 const Pid = require('./pid');
 const pinMap = require('./pin-map');
+const DataLogger = require('./data-logger');
 
 const defaultConfiguration = Object.freeze({
 	gpio: undefined,
 	gpioPin: 17,
-	verbose: false
+	verbose: false,
+	log: 'logs/relay.csv'
 });
 
 module.exports = class {
@@ -16,6 +18,7 @@ module.exports = class {
 		this._configuration = _.extend({}, defaultConfiguration, configuration || {});
 		this._active = false;
 		this._wiringPiPin = pinMap.gpioToWiringPi(this._configuration.gpioPin);
+		this._dataLogger = new DataLogger(this._configuration.log);
 		if(this._wiringPiPin === undefined) {
 			throw `GPIO pin ${this._configuration.gpioPin} is unavailable for use.`;
 		}
@@ -26,6 +29,10 @@ module.exports = class {
 		if(this._configuration.verbose) {
 			console.log(`Relay on GPIO ${this._configuration.gpioPin} set to ${value}.`);
 		}
+		this._dataLogger.write({
+			date: this._dataLogger.now(),
+			value: value
+		});
 		this._configuration.gpio.write(this._wiringPiPin, value);
 	}
 
@@ -35,6 +42,7 @@ module.exports = class {
 
 	stop() {
 		this._configuration.gpio.unexport(this._configuration.gpioPin);
+		this._dataLogger.stop();
 	}
 
 	mode(newMode) {

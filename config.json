@@ -4,15 +4,18 @@
 	"devices": [{
 		"name": "HLT",
 		"setPoint": 100,
+		"verbose": false,
 		"pid": {
 			"tempSensorId": "28-011564c2ffff",
 			"proportionalGain": 0.2,
 			"integralGain": 0.2,
 			"differentialGain": 2,
+			"log": "logs/HLT-Pid.csv",
 			"verbose": false
 		},
 		"relay": {
 			"gpioPin": 17,
+			"log": "logs/HLT-Relay.csv",
 			"verbose": false
 		}
 	}]

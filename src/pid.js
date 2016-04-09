@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const DataLogger = require('./data-logger');
 
 const INTEGRAL_SUM_MIN = -5;
 const INTEGRAL_SUM_MAX = 5;
@@ -10,7 +11,8 @@ const defaults = Object.freeze({
 	proportionalGain: 0,
 	integralGain: 0,
 	differentialGain: 0,
-	verbose: false
+	verbose: false,
+	log: 'logs/pid.csv'
 });
 
 module.exports = class {
@@ -19,6 +21,7 @@ module.exports = class {
 		this._integratorSum = 0;
 		this._differentialPrevious = undefined;
 		this._temperatureReader = temperatureReader;
+		this._dataLogger = new DataLogger(this._configuration.log);
 		this.setPoint = setPoint;
 	}
 
@@ -30,11 +33,26 @@ module.exports = class {
 		var integralComponent = this._integral(error);
 		var differentialComponent = this._differential(position);
 
-		if(this._configuration.verbose) {
-			console.log(`position: ${position}, proportionalComponent: ${proportionalComponent}, integralComponent: ${integralComponent}, differentialComponent: ${differentialComponent}`);
-		}
 		this.value = proportionalComponent + integralComponent + differentialComponent;
+
+		if(this._configuration.verbose) {
+			console.log(`position: ${position}, proportionalComponent: ${proportionalComponent}, integralComponent: ${integralComponent}, differentialComponent: ${differentialComponent}, result: ${this.value}`);
+		}
+		this._dataLogger.write({
+			time: this._dataLogger.now(),
+			setPoint: this.setPoint,
+			position: position,
+			proportional: proportionalComponent,
+			integral: integralComponent,
+			differential: differentialComponent,
+			output: this.value
+		});
+
 		return this.value;
+	}
+
+	stop() {
+		this._dataLogger.stop();
 	}
 
 	_proportional(error) {

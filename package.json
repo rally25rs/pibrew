@@ -19,6 +19,7 @@
   "homepage": "https://github.com/rally25rs/pibrew#readme",
   "dependencies": {
     "ds18b20": "^0.1.0",
+    "fast-csv": "^1.1.0",
     "koa": "^1.1.2",
     "lodash": "^3.10.1",
     "minimist": "^1.2.0",

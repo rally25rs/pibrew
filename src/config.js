@@ -6,7 +6,7 @@ const configFile = require('../config.json');
 
 const defaults = {
 	env: 'prod',
-	poll: 333,
+	poll: 2000,
 	devices: []
 };
 

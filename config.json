@@ -1,6 +1,9 @@
 {
 	"env": "dev",
 	"poll": 5000,
+	"web": {
+		"port": 8080
+	},
 	"devices": [{
 		"name": "HLT",
 		"setPoint": 100,

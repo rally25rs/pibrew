@@ -20,7 +20,9 @@
   "dependencies": {
     "ds18b20": "^0.1.0",
     "fast-csv": "^1.1.0",
-    "koa": "^1.1.2",
+    "koa": "^1.2.0",
+    "koa-router": "^5.4.0",
+    "koa-static": "^2.0.0",
     "lodash": "^3.10.1",
     "minimist": "^1.2.0",
     "pi-gpioutil": "0.0.3"

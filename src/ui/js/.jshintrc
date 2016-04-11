@@ -1,0 +1,9 @@
+{
+	"strict": true,
+	"node": false,
+	"quotmark": "single",
+	"esnext": true,
+	"predef": [
+		"$"
+	]
+}

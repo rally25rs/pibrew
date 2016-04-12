@@ -21,5 +21,22 @@
 			"log": "logs/HLT-Relay.csv",
 			"verbose": false
 		}
+	}, {
+		"name": "MLT",
+		"setPoint": 100,
+		"verbose": false,
+		"pid": {
+			"tempSensorId": "28-011564dfa5ff",
+			"proportionalGain": 0.2,
+			"integralGain": 0.2,
+			"differentialGain": 2,
+			"log": "logs/MLT-Pid.csv",
+			"verbose": false
+		},
+		"relay": {
+			"gpioPin": 22,
+			"log": "logs/MLT-Relay.csv",
+			"verbose": false
+		}
 	}]
 }

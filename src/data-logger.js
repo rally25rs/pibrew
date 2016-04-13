@@ -3,19 +3,17 @@
 const fs = require('fs');
 const csv = require('fast-csv');
 
-var csvStream, writableStream;
-
 module.exports = class {
 	constructor(logPath) {
-		csvStream = csv.createWriteStream({headers: true});
-	    writableStream = fs.createWriteStream(logPath);
+		this._csvStream = csv.createWriteStream({headers: true});
+	    this._writableStream = fs.createWriteStream(logPath);
 
-		csvStream.pipe(writableStream);
+		this._csvStream.pipe(this._writableStream);
 	}
 
 	stop() {
-		csvStream.end();
-		writableStream.end();
+		this._csvStream.end();
+		this._writableStream.end();
 	}
 
 	now() {
@@ -24,6 +22,6 @@ module.exports = class {
 	}
 
 	write(data) {
-		csvStream.write(data);
+		this._csvStream.write(data);
 	}
 };

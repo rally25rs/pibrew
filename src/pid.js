@@ -3,8 +3,8 @@
 const _ = require('lodash');
 const DataLogger = require('./data-logger');
 
-const INTEGRAL_SUM_MIN = -5;
-const INTEGRAL_SUM_MAX = 5;
+const INTEGRAL_SUM_MIN = -2;
+const INTEGRAL_SUM_MAX = 2;
 
 const defaults = Object.freeze({
 	tempSensorId: undefined,
@@ -12,13 +12,15 @@ const defaults = Object.freeze({
 	integralGain: 0,
 	differentialGain: 0,
 	verbose: false,
-	log: 'logs/pid.csv'
+	log: 'logs/pid.csv',
+	maxIntegralIterations: 4
 });
 
 module.exports = class {
 	constructor(setPoint, temperatureReader, configuration) {
 		this._configuration = _.extend({}, defaults, configuration);
 		this._integratorSum = 0;
+		this._integratorIterations = [];
 		this._differentialPrevious = undefined;
 		this._temperatureReader = temperatureReader;
 		this._dataLogger = new DataLogger(this._configuration.log);
@@ -31,7 +33,7 @@ module.exports = class {
 
 		var proportionalComponent = this._proportional(error);
 		var integralComponent = this._integral(error);
-		var differentialComponent = this._differential(position);
+		var differentialComponent = this._differential(error);
 
 		this.value = proportionalComponent + integralComponent + differentialComponent;
 
@@ -60,27 +62,36 @@ module.exports = class {
 	}
 
 	_integral(error) {
-		this._integratorSum += error;
-
-		if(this._integratorSum > INTEGRAL_SUM_MAX) {
-			this._integratorSum = INTEGRAL_SUM_MAX;
-		} else if(this._integratorSum < INTEGRAL_SUM_MIN) {
-			this._integratorSum = INTEGRAL_SUM_MIN;
+		var scaledError = error * this._configuration.integralGain;
+		this._integratorIterations.push(scaledError);
+		if(this._integratorIterations.length > this._configuration.maxIntegralIterations) {
+			this._integratorIterations.shift();
 		}
 
-		return this._configuration.integralGain * this._integratorSum;
+		var _integratorSum = 0;
+		for(var i = 0; i < this._integratorIterations.length; i++) {
+			_integratorSum += this._integratorIterations[i];
+		}
+
+		if(_integratorSum > INTEGRAL_SUM_MAX) {
+			_integratorSum = INTEGRAL_SUM_MAX;
+		} else if(_integratorSum < INTEGRAL_SUM_MIN) {
+			_integratorSum = INTEGRAL_SUM_MIN;
+		}
+
+		return _integratorSum;
 	}
 
-	_differential(position) {
+	_differential(error) {
 		var differentialComponent;
 
 		if(this._differentialPrevious === undefined) {
-			this._differentialPrevious = position;
+			this._differentialPrevious = error;
 		}
 
-		differentialComponent = this._configuration.differentialGain * (this._differentialPrevious - position);
+		differentialComponent = (this._configuration.differentialGain * (this._differentialPrevious - error)) * -1;
 
-		this._differentialPrevious = position;
+		this._differentialPrevious = error;
 		return differentialComponent;
 	}
 };

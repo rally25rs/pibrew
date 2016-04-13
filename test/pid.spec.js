@@ -47,10 +47,10 @@ describe('PID Controller', function() {
 		});
 
 		it('increases return value when error is increasing', function() {
-			var pid = new Pid(10, mockTemperatureReader, makeConfiguration('test', 0, 2, 0));
+			var pid = new Pid(10, mockTemperatureReader, makeConfiguration('test', 0, 0.5, 0));
 			pid._integral(1);
-			var result1 = pid._integral(3);
-			var result2 = pid._integral(4);
+			var result1 = pid._integral(2);
+			var result2 = pid._integral(3);
 			expect(result1).is.lessThan(result2);
 		});
 
@@ -70,18 +70,18 @@ describe('PID Controller', function() {
 	});
 
 	describe('differential calculation', function() {
-		it('returns positive value when input is decreasing', function() {
+		it('returns negative value when error is decreasing', function() {
 			var pid = new Pid(10, mockTemperatureReader, makeConfiguration('test', 0, 0, 2));
 			pid._differential(8);
 			var result = pid._differential(7);
-			expect(result).is.greaterThan(0);
+			expect(result).is.lessThan(0);
 		});
 
-		it('returns negative value when input is increasing', function() {
+		it('returns positive value when error is increasing', function() {
 			var pid = new Pid(10, mockTemperatureReader, makeConfiguration('test', 0, 0, 2));
 			pid._differential(7);
 			var result = pid._differential(8);
-			expect(result).is.lessThan(0);
+			expect(result).is.greaterThan(0);
 		});
 	});
 

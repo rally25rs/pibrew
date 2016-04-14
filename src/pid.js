@@ -38,7 +38,7 @@ module.exports = class {
 		var integralComponent = this._integral(error);
 		var differentialComponent = this._differential(error);
 
-		if(position > overshootSetPoint && differentialComponent > 0) {
+		if((position > overshootSetPoint && differentialComponent > 0) || position > this.setPoint) {
 			this.preventOvershoot = false;
 		}
 
@@ -50,6 +50,9 @@ module.exports = class {
 		this._dataLogger.write({
 			time: this._dataLogger.now(),
 			setPoint: this.setPoint,
+			preventOvershoot: this.preventOvershoot,
+			overshootSetPoint: overshootSetPoint,
+			error: error,
 			position: position,
 			proportional: proportionalComponent,
 			integral: integralComponent,

@@ -10,16 +10,17 @@
 		"setPointRange": 0.5,
 		"verbose": false,
 		"pid": {
-			"tempSensorId": "28-011564dfa5ff",
+			"tempSensorId": "28-011564c2ffff",
 			"proportionalGain": 0.4,
 			"integralGain": 0.1,
-			"differentialGain": 4,
-			"log": "logs/HLT-Pid.csv",
+			"differentialGain": 2,
+			"overshootEstimate": 8,
+			"log": "logs/MLT-Pid.csv",
 			"verbose": false
 		},
 		"relay": {
-			"gpioPin": 17,
-			"log": "logs/HLT-Relay.csv",
+			"gpioPin": 22,
+			"log": "logs/MLT-Relay.csv",
 			"verbose": false
 		}
 	}, {
@@ -28,16 +29,17 @@
 		"setPointRange": 0.5,
 		"verbose": false,
 		"pid": {
-			"tempSensorId": "28-011564c2ffff",
+			"tempSensorId": "28-011564dfa5ff",
 			"proportionalGain": 0.4,
 			"integralGain": 0.1,
-			"differentialGain": 2,
-			"log": "logs/MLT-Pid.csv",
+			"differentialGain": 4,
+			"overshootEstimate": 8,
+			"log": "logs/HLT-Pid.csv",
 			"verbose": false
 		},
 		"relay": {
-			"gpioPin": 22,
-			"log": "logs/MLT-Relay.csv",
+			"gpioPin": 17,
+			"log": "logs/HLT-Relay.csv",
 			"verbose": false
 		}
 	}]

@@ -13,7 +13,8 @@ const defaults = Object.freeze({
 	differentialGain: 0,
 	verbose: false,
 	log: 'logs/pid.csv',
-	maxIntegralIterations: 4
+	maxIntegralIterations: 4,
+	overshootEstimate: 0
 });
 
 module.exports = class {
@@ -25,15 +26,21 @@ module.exports = class {
 		this._temperatureReader = temperatureReader;
 		this._dataLogger = new DataLogger(this._configuration.log);
 		this.setPoint = setPoint;
+		this.preventOvershoot = this._configuration.overshootEstimate > 0;
 	}
 
 	update() {
 		var position = this._temperatureReader.temperature(this._configuration.tempSensorId);
-		var error = this.setPoint - position;
+		var overshootSetPoint = this.setPoint - this._configuration.overshootEstimate;
+		var error = (this.preventOvershoot ? overshootSetPoint : this.setPoint) - position;
 
 		var proportionalComponent = this._proportional(error);
 		var integralComponent = this._integral(error);
 		var differentialComponent = this._differential(error);
+
+		if(position > overshootSetPoint && differentialComponent > 0) {
+			this.preventOvershoot = false;
+		}
 
 		this.value = proportionalComponent + integralComponent + differentialComponent;
 
@@ -51,6 +58,11 @@ module.exports = class {
 		});
 
 		return this.value;
+	}
+
+	setPoint(value) {
+		this.setPoint = value;
+		this.preventOvershoot = this._configuration.overshootEstimate > 0;
 	}
 
 	stop() {

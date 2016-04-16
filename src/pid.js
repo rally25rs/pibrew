@@ -38,7 +38,7 @@ module.exports = class {
 		var integralComponent = this._integral(error);
 		var differentialComponent = this._differential(error);
 
-		if((position > overshootSetPoint && differentialComponent > 0) || position > this.setPoint) {
+		if((position > overshootSetPoint && integralComponent < 0) || position > this.setPoint) {
 			this.preventOvershoot = false;
 		}
 

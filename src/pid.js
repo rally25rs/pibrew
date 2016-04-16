@@ -30,7 +30,7 @@ module.exports = class {
 	}
 
 	update() {
-		var position = this._temperatureReader.temperature(this._configuration.tempSensorId);
+		var position = this._temperatureReader.temperature(this._configuration.tempSensorId, { parser: 'preciseDecimal' });
 		var overshootSetPoint = this.setPoint - this._configuration.overshootEstimate;
 		var error = (this.preventOvershoot ? overshootSetPoint : this.setPoint) - position;
 

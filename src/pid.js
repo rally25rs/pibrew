@@ -27,6 +27,7 @@ module.exports = class {
 		this._dataLogger = new DataLogger(this._configuration.log);
 		this.setPoint = setPoint;
 		this.preventOvershoot = this._configuration.overshootEstimate > 0;
+		this.previousPosition = undefined;
 	}
 
 	update() {
@@ -38,7 +39,10 @@ module.exports = class {
 		var integralComponent = this._integral(error);
 		var differentialComponent = this._differential(error);
 
-		if((position > overshootSetPoint && integralComponent < 0) || position > this.setPoint) {
+		if(this.previousPosition === undefined) {
+			this.previousPosition = position;
+		}
+		if((position > overshootSetPoint && position < this.previousPosition) || position > this.setPoint) {
 			this.preventOvershoot = false;
 		}
 
@@ -60,6 +64,7 @@ module.exports = class {
 			output: this.value
 		});
 
+		this.previousPosition = position;
 		return this.value;
 	}
 

@@ -89,12 +89,12 @@ describe('PID Controller', function() {
 		var pidOutputs = [];
 		var currentTemperature = 70;
 		var setPoint = 170;
-		var mockTemperatureReader = {
+		var mockTemperatureReader2 = {
 			temperature: function() {
 				return currentTemperature;
 			}
 		};
-		var pid = new Pid(setPoint, mockTemperatureReader, makeConfiguration('test', 0.2, 0.2, 1));
+		var pid = new Pid(setPoint, mockTemperatureReader2, makeConfiguration('test', 0.2, 0.2, 1));
 		var lastPidOutput;
 
 		for(var i = 0; i < 1000; i++) {
@@ -108,5 +108,74 @@ describe('PID Controller', function() {
 
 		expect(currentTemperature).to.be.lessThan(setPoint + 1);
 		expect(currentTemperature).to.be.greaterThan(setPoint - 1);
+	});
+
+	describe('preventOvershoot', function() {
+		function makePreventOvershootConfiguration(overshootEstimate) {
+			return {
+				tempSensorId: 'test',
+				proportionalGain: 1,
+				integralGain: 1,
+				differentialGain: 1,
+				preventOvershoot: true,
+				overshootEstimate: overshootEstimate,
+				verbose: true
+			};
+		}
+
+		function makeMockTempReader(temperatures) {
+			var temperatureGenerator = (function*() {
+				for(var i =0; i < temperatures.length; i++) {
+					yield temperatures[i];
+				}
+			}());
+
+			return {
+				temperature: function() {
+					return temperatureGenerator.next().value;
+				}
+			};
+		}
+
+		it('stays on if below overshoot setpoint and temp rising', function() {
+			var pid = new Pid(10, makeMockTempReader([2, 3]), makePreventOvershootConfiguration(5));
+			pid.update();
+			pid.update();
+
+			expect(pid.preventOvershoot).to.be.true;
+		});
+
+		it('stays on if below overshoot setpoint and temp falling', function() {
+			var pid = new Pid(10, makeMockTempReader([3, 2]), makePreventOvershootConfiguration(5));
+			pid.update();
+			pid.update();
+
+			expect(pid.preventOvershoot).to.be.true;
+		});
+
+		it('stays on if between overshoot setpoint and config setpoint and temp rising', function() {
+			var pid = new Pid(10, makeMockTempReader([6, 7]), makePreventOvershootConfiguration(5));
+			pid.update();
+			pid.update();
+
+			expect(pid.preventOvershoot).to.be.true;
+		});
+
+		it('turns off if between overshoot setpoint and config setpoint and temp falling', function() {
+			var pid = new Pid(10, makeMockTempReader([7, 6]), makePreventOvershootConfiguration(5));
+			pid.update();
+			pid.update();
+
+			expect(pid.preventOvershoot).to.be.false;
+		});
+
+		it('turns off if temp rises above setpoint', function() {
+			var pid = new Pid(10, makeMockTempReader([4, 7, 11]), makePreventOvershootConfiguration(5));
+			pid.update();
+			pid.update();
+			pid.update();
+
+			expect(pid.preventOvershoot).to.be.false;
+		});
 	});
 });

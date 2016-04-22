@@ -28,6 +28,16 @@ module.exports = class {
 		this._pid.stop();
 	}
 
+	getStatus() {
+		return {
+			name: this._configuration.name,
+			setPoint: this._configuration.setPoint,
+			currentTemp: this._configuration.temperatureReader.temperature(this._configuration.pid.tempSensorId),
+			mode: 'auto',
+			active: this._active
+		};
+	}
+
 	update() {
 		var pidValue = this._pid.update();		
 		var prevMode = this._relayController.mode();

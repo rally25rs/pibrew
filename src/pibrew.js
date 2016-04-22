@@ -5,14 +5,12 @@ const TemperatureReader = require('./temperature-reader');
 const gpio = require('./pi-gpio-adapter');
 const DeviceController = require('./device-controller');
 const sensorsAdapter = require('./ds18b20-adapter');
-const Web = require('./web');
+const web = require('./web');
 
 var exiting = false;
 var devices = [];
 var deviceUpdateIntervalId;
 var temperatureReader = new TemperatureReader(sensorsAdapter);
-var web = new Web(config.web);
-
 
 function _initializeDevice(deviceConfig) {
 	deviceConfig.relay.gpio = gpio;
@@ -25,11 +23,20 @@ function _updateDevices() {
 	devices.forEach((device) => device.update());
 }
 
+function getStatus() {
+	return {
+		devices: devices.map(function (deviceController) {
+			return deviceController.getStatus();
+		})
+	};
+}
+
 function start() {
 	temperatureReader.start(config.poll);
 	config.devices.forEach(_initializeDevice);
 	deviceUpdateIntervalId = setInterval(_updateDevices, config.poll);
 	devices.forEach((device) => device.start());
+	web.init(config.web, getStatus);
 	web.start();
 }
 

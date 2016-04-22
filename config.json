@@ -5,7 +5,7 @@
 		"port": 8080
 	},
 	"devices": [{
-		"name": "HLT",
+		"name": "Hot Liquor Tank",
 		"setPoint": 100,
 		"setPointRange": 0.2,
 		"verbose": false,
@@ -24,7 +24,7 @@
 			"verbose": false
 		}
 	}, {
-		"name": "MLT",
+		"name": "Mash Tun",
 		"setPoint": 100,
 		"setPointRange": 0.5,
 		"verbose": false,

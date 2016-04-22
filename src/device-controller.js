@@ -15,6 +15,7 @@ module.exports = class {
 	constructor(configuration) {
 		this._configuration = _.extend({}, defaults, configuration);
 
+		this._mode = 'off';
 		this._pid = new Pid(configuration.setPoint, configuration.temperatureReader, configuration.pid);
 		this._relayController = new RelayController(configuration.relay);
 	}
@@ -33,30 +34,38 @@ module.exports = class {
 			name: this._configuration.name,
 			setPoint: this._configuration.setPoint,
 			currentTemp: this._configuration.temperatureReader.temperature(this._configuration.pid.tempSensorId),
-			mode: 'auto',
+			mode: this._mode,
 			active: this._active
 		};
+	}
+
+	setMode(mode) {
+		this._mode = mode;
+		this.update();
 	}
 
 	update() {
 		var pidValue = this._pid.update();		
 		var prevMode = this._relayController.mode();
-		var newMode = prevMode;
+		var newActive = prevMode;
 
 		if(this._configuration.verbose) {
-			console.log(`Pid value: ${pidValue}, SetPoint: ${this._configuration.setPoint}`);
+			console.log(`Mode: ${this._mode}, Pid value: ${pidValue}, SetPoint: ${this._configuration.setPoint}`);
 		}
 
-		if(prevMode === 'on') {
+		if(this._mode === 'auto' && prevMode === 'on') {
 			if(pidValue < this._configuration.setPointRange * -1) {
-				newMode = 'off';
+				newActive = 'off';
+			}
+		} else if(this._mode === 'auto') {
+			if(pidValue > this._configuration.setPointRange) {
+				newActive = 'on';
 			}
 		} else {
-			if(pidValue > this._configuration.setPointRange) {
-				newMode = 'on';
-			}
+			newActive = this._mode;
 		}
-		this._active = newMode === 'on';
-		this._relayController.mode(newMode);
+
+		this._active = newActive === 'on';
+		this._relayController.mode(newActive);
 	}
 };

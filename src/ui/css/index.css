@@ -4,7 +4,8 @@ body {
 	font-size: 20px;
 }
 
-.btn:focus {
+.btn:focus,
+.btn.active:focus {
 	outline: none;
 }
 

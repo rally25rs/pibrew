@@ -31,12 +31,16 @@ function getStatus() {
 	};
 }
 
+function updateDeviceMode(deviceIndex, mode) {
+	devices[deviceIndex].setMode(mode);
+}
+
 function start() {
 	temperatureReader.start(config.poll);
 	config.devices.forEach(_initializeDevice);
 	deviceUpdateIntervalId = setInterval(_updateDevices, config.poll);
 	devices.forEach((device) => device.start());
-	web.init(config.web, getStatus);
+	web.init(config.web, getStatus, updateDeviceMode);
 	web.start();
 }
 

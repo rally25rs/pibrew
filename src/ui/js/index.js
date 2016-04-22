@@ -10,6 +10,17 @@ function ajaxUpdateStatus() {
 	});
 }
 
+function ajaxSetMode(data) {
+	return $.ajax({
+		url: '/api/mode',
+		type: 'PUT',
+		dataType: 'json',
+		data: data
+	}).fail(function(jqXHR) {
+		console.error('unable to get data', jqXHR);
+	});
+}
+
 const DeviceList = React.createClass({
 	getInitialState: function() {
 		return {
@@ -29,11 +40,22 @@ const DeviceList = React.createClass({
 		});
 	},
 
+	setMode: function(deviceIndex, mode) {
+		ajaxSetMode({
+			deviceIndex: deviceIndex,
+			mode: mode
+		}).done((result) => {
+			this.setState(result);
+		});
+	},
+
 	render: function() {
-		var deviceNodes = this.state.devices.map(function(device) {
+		var deviceNodes = this.state.devices.map((device, idx) => {
 			return (
-				<Device key={device.name}
-				        device={device} />
+				<Device key={idx}
+						deviceIndex={idx}
+				        device={device}
+				        setModeFunc={this.setMode} />
 			);
 		});
 
@@ -47,8 +69,10 @@ const DeviceList = React.createClass({
 
 const Device = React.createClass({
 	render: function() {
-		var mode = this.props.device.mode;
-		var buttonClass = {
+		const setModeFunc = this.props.setModeFunc;
+		const deviceIndex = this.props.deviceIndex;
+		const mode = this.props.device.mode;
+		const buttonClass = {
 			off: 'btn btn-default',
 			auto: 'btn btn-default',
 			on: 'btn btn-default'
@@ -66,13 +90,19 @@ const Device = React.createClass({
 
 					<div className="btn-group btn-group-justified btn-group-lg" role="group">
 						<div className="btn-group" role="group">
-							<button type="button" className={buttonClass.off}>Off</button>
+							<button type="button"
+							        className={buttonClass.off}
+							        onClick={() => setModeFunc(deviceIndex, 'off')}>Off</button>
 						</div>
 						<div className="btn-group" role="group">
-							<button type="button" className={buttonClass.auto}>Auto</button>
+							<button type="button"
+							        className={buttonClass.auto}
+							        onClick={() => setModeFunc(deviceIndex, 'auto')}>Auto</button>
 						</div>
 						<div className="btn-group" role="group">
-							<button type="button" className={buttonClass.on}>On</button>
+							<button type="button"
+							        className={buttonClass.on}
+							        onClick={() => setModeFunc(deviceIndex, 'on')}>On</button>
 						</div>
 					</div>
 				</div>

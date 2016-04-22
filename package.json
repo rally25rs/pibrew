@@ -22,6 +22,7 @@
     "ds18b20": "https://github.com/rally25rs/ds18b20.git#preciseDecimal",
     "fast-csv": "^1.1.0",
     "koa": "^1.2.0",
+    "koa-bodyparser": "^2.0.1",
     "koa-router": "^5.4.0",
     "koa-static": "^2.0.0",
     "lodash": "^3.10.1",

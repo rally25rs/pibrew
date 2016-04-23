@@ -118,8 +118,7 @@ describe('PID Controller', function() {
 				integralGain: 1,
 				differentialGain: 1,
 				preventOvershoot: true,
-				overshootEstimate: overshootEstimate,
-				verbose: true
+				overshootEstimate: overshootEstimate
 			};
 		}
 

@@ -8,14 +8,15 @@ const defaults = Object.freeze({
 	setPoint: 0,
 	setPointRange: 0.2,
 	temperatureReader: undefined,
-	verbose: false
+	verbose: false,
+	initialMode: 'off'
 });
 
 module.exports = class {
 	constructor(configuration) {
 		this._configuration = _.extend({}, defaults, configuration);
 
-		this._mode = 'off';
+		this._mode = this._configuration.initialMode;
 		this._pid = new Pid(configuration.setPoint, configuration.temperatureReader, configuration.pid);
 		this._relayController = new RelayController(configuration.relay);
 	}
@@ -46,20 +47,18 @@ module.exports = class {
 
 	update() {
 		var pidValue = this._pid.update();		
-		var prevMode = this._relayController.mode();
-		var newActive = prevMode;
+		var prevActive = this._relayController.mode();
+		var newActive = prevActive;
 
 		if(this._configuration.verbose) {
 			console.log(`Mode: ${this._mode}, Pid value: ${pidValue}, SetPoint: ${this._configuration.setPoint}`);
 		}
 
-		if(this._mode === 'auto' && prevMode === 'on') {
-			if(pidValue < this._configuration.setPointRange * -1) {
-				newActive = 'off';
-			}
-		} else if(this._mode === 'auto') {
+		if(this._mode === 'auto') {
 			if(pidValue > this._configuration.setPointRange) {
 				newActive = 'on';
+			} else {
+				newActive = 'off';
 			}
 		} else {
 			newActive = this._mode;

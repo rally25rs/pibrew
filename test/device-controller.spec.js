@@ -26,7 +26,8 @@ describe('DeviceController', () => {
 					gpio: gpio,
 					gpioPin: 17
 				},
-				mockTemperatureReader: mockTemperatureReader
+				mockTemperatureReader: mockTemperatureReader,
+				initialMode: 'auto'
 			};
 
 			const mockPid = function() {
@@ -54,7 +55,8 @@ describe('DeviceController', () => {
 					gpio: gpio,
 					gpioPin: 17
 				},
-				mockTemperatureReader: mockTemperatureReader
+				mockTemperatureReader: mockTemperatureReader,
+				initialMode: 'auto'
 			};
 
 			const mockPid = function() {
@@ -73,60 +75,99 @@ describe('DeviceController', () => {
 			expect(deviceController._relayController.mode()).to.equal('off');
 		});
 
-		// it('disables relay if pid reports higher than 0 but within configured range', () => {
-		// 	const deviceConfiguration = {
-		// 		setPoint: 100,
-		// 		setPointRange: 0.5,
-		// 		pid: {},
-		// 		relay: {
-		// 			gpio: gpio,
-		// 			gpioPin: 17
-		// 		},
-		// 		mockTemperatureReader: mockTemperatureReader
-		// 	};
+		it('disables relay if pid reports higher than 0 but within configured range', () => {
+			const deviceConfiguration = {
+				setPoint: 100,
+				setPointRange: 0.5,
+				pid: {},
+				relay: {
+					gpio: gpio,
+					gpioPin: 17
+				},
+				mockTemperatureReader: mockTemperatureReader,
+				initialMode: 'auto'
+			};
 
-		// 	const mockPid = function() {
-		// 		return {
-		// 			update: function() { return 1.2; }
-		// 		};
-		// 	};
+			const mockPid = function() {
+				return {
+					update: function() { return 0.2; }
+				};
+			};
 
-		// 	const DeviceController = proxyquire('../src/device-controller', {
-		// 		'./pid': mockPid
-		// 	});
+			const DeviceController = proxyquire('../src/device-controller', {
+				'./pid': mockPid
+			});
 
-		// 	const deviceController = new DeviceController(deviceConfiguration);
-		// 	expect(deviceController._relayController.mode()).to.equal('off');
-		// 	deviceController.update();
-		// 	expect(deviceController._relayController.mode()).to.equal('off');
-		// });
+			const deviceController = new DeviceController(deviceConfiguration);
+			expect(deviceController._relayController.mode()).to.equal('off');
+			deviceController.update();
+			expect(deviceController._relayController.mode()).to.equal('off');
+		});
 
-		// it('enables relay if pid reports lower than setpoint but within configured range', () => {
-		// 	const deviceConfiguration = {
-		// 		setPoint: 100,
-		// 		setPointRange: 0.5,
-		// 		pid: {},
-		// 		relay: {
-		// 			gpio: gpio,
-		// 			gpioPin: 17
-		// 		},
-		// 		mockTemperatureReader: mockTemperatureReader
-		// 	};
+		it('disables relay if pid reports lower than 0 but within configured range', () => {
+			const deviceConfiguration = {
+				setPoint: 100,
+				setPointRange: 0.5,
+				pid: {},
+				relay: {
+					gpio: gpio,
+					gpioPin: 17
+				},
+				mockTemperatureReader: mockTemperatureReader
+			};
 
-		// 	const mockPid = function() {
-		// 		return {
-		// 			update: function() { return 0.4; }
-		// 		};
-		// 	};
+			const mockPid = function() {
+				return {
+					update: function() { return -0.4; }
+				};
+			};
 
-		// 	const DeviceController = proxyquire('../src/device-controller', {
-		// 		'./pid': mockPid
-		// 	});
+			const DeviceController = proxyquire('../src/device-controller', {
+				'./pid': mockPid
+			});
 
-		// 	const deviceController = new DeviceController(deviceConfiguration);
-		// 	expect(deviceController._relayController.mode()).to.equal('off');
-		// 	deviceController.update();
-		// 	expect(deviceController._relayController.mode()).to.equal('off');
-		// });
+			const deviceController = new DeviceController(deviceConfiguration);
+			expect(deviceController._relayController.mode()).to.equal('off');
+			deviceController.update();
+			expect(deviceController._relayController.mode()).to.equal('off');
+		});
+
+		it('disables relay if pid goes higher than configured range then returns to within range', () => {
+			const deviceConfiguration = {
+				setPoint: 100,
+				setPointRange: 0.5,
+				pid: {},
+				relay: {
+					gpio: gpio,
+					gpioPin: 17
+				},
+				mockTemperatureReader: mockTemperatureReader,
+				initialMode: 'auto'
+			};
+
+			var pidValue = 0;
+
+			const mockPid = function() {
+				return {
+					update: function() { return pidValue; }
+				};
+			};
+
+			const DeviceController = proxyquire('../src/device-controller', {
+				'./pid': mockPid
+			});
+
+			const deviceController = new DeviceController(deviceConfiguration);
+
+			expect(deviceController._relayController.mode()).to.equal('off');
+			deviceController.update();
+			expect(deviceController._relayController.mode()).to.equal('off');
+			pidValue = 1;
+			deviceController.update();
+			expect(deviceController._relayController.mode()).to.equal('on');
+			pidValue = 0.2;
+			deviceController.update();
+			expect(deviceController._relayController.mode()).to.equal('off');
+		});
 	});
 });

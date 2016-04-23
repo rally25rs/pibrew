@@ -45,6 +45,12 @@ module.exports = class {
 		this.update();
 	}
 
+	setSetpoint(setPoint) {
+		this._configuration.setPoint = setPoint;
+		this._pid.setSetpoint(setPoint);
+		this.update();
+	}
+
 	update() {
 		var pidValue = this._pid.update();		
 		var prevActive = this._relayController.mode();

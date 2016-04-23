@@ -35,12 +35,16 @@ function updateDeviceMode(deviceIndex, mode) {
 	devices[deviceIndex].setMode(mode);
 }
 
+function updateDeviceSetpoint(deviceIndex, setPoint) {
+	devices[deviceIndex].setSetpoint(setPoint);
+}
+
 function start() {
 	temperatureReader.start(config.poll);
 	config.devices.forEach(_initializeDevice);
 	deviceUpdateIntervalId = setInterval(_updateDevices, config.poll);
 	devices.forEach((device) => device.start());
-	web.init(config.web, getStatus, updateDeviceMode);
+	web.init(config.web, getStatus, updateDeviceMode, updateDeviceSetpoint);
 	web.start();
 }
 

@@ -14,18 +14,21 @@ var _configuration;
 var _getStatusFunction;
 var _httpServer;
 var _updateDeviceModeFunction;
+var _updateDeviceSetpointFunction;
 
-exports.init = function(configuration, getStatusFunction, updateDeviceModeFunction) {
+exports.init = function(configuration, getStatusFunction, updateDeviceModeFunction, updateDeviceSetpointFunction) {
 	_configuration = _.extend({}, defaults, configuration);
 	_app = koa();
 	_getStatusFunction = getStatusFunction;
 	_updateDeviceModeFunction = updateDeviceModeFunction;
+	_updateDeviceSetpointFunction = updateDeviceSetpointFunction;
 };
 
 exports.start = function() {
 	const router = new Router();
 	router.get('/api/status', apiUpdateMiddleware);
 	router.put('/api/mode', apiSetModeMiddleware);
+	router.put('/api/setpoint', apiSetSetpointMiddleware);
 
 	_app.use(require('koa-static')('src/ui'));
 	_app.use(bodyParser());
@@ -44,12 +47,21 @@ function *apiUpdateMiddleware(next) {
 }
 
 function *apiSetModeMiddleware(next) {
-	console.log(this.request);
 	const deviceIndex = this.request.body.deviceIndex;
 	const mode = this.request.body.mode;
 
 	yield next;
 
 	_updateDeviceModeFunction(deviceIndex, mode);
+	this.response.body = JSON.stringify(_getStatusFunction());
+}
+
+function *apiSetSetpointMiddleware(next) {
+	const deviceIndex = this.request.body.deviceIndex;
+	const setPoint = this.request.body.setPoint;
+
+	yield next;
+
+	_updateDeviceSetpointFunction(deviceIndex, setPoint);
 	this.response.body = JSON.stringify(_getStatusFunction());
 }

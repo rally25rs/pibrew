@@ -21,6 +21,17 @@ function ajaxSetMode(data) {
 	});
 }
 
+function ajaxSetSetpoint(data) {
+	return $.ajax({
+		url: '/api/setpoint',
+		type: 'PUT',
+		dataType: 'json',
+		data: data
+	}).fail(function(jqXHR) {
+		console.error('unable to get data', jqXHR);
+	});
+}
+
 const DeviceList = React.createClass({
 	getInitialState: function() {
 		return {
@@ -68,6 +79,10 @@ const DeviceList = React.createClass({
 });
 
 const Device = React.createClass({
+	openSetpointModal: function() {
+		this.setpointModal.show();
+	},
+
 	render: function() {
 		const setModeFunc = this.props.setModeFunc;
 		const deviceIndex = this.props.deviceIndex;
@@ -85,7 +100,7 @@ const Device = React.createClass({
 				<div className="device">
 					<span className={this.props.device.active ? 'active-indicator on' : 'active-indicator'}></span>
 					<span className="name">{this.props.device.name}</span>
-					<span className="target temp">{this.props.device.setPoint}</span>
+					<span className="target temp" onClick={this.openSetpointModal}>{this.props.device.setPoint}</span>
 					<span className="current temp">{this.props.device.currentTemp}</span>
 
 					<div className="btn-group btn-group-justified btn-group-lg" role="group">
@@ -106,6 +121,57 @@ const Device = React.createClass({
 						</div>
 					</div>
 				</div>
+
+				<SetpointModal ref={(ref) => this.setpointModal = ref}
+					deviceIndex={deviceIndex}
+					deviceName={this.props.device.name} />
+			</div>
+		);
+	}
+});
+
+const SetpointModal = React.createClass({
+	show: function() {
+		const $bsModal = $(this.bsModal);
+		$bsModal.on('shown.bs.modal', () => {
+		  setTimeout(() => {
+			  $(this.setpointInput).focus();
+		  }, 500);
+		});
+		$bsModal.modal({
+			show: true
+		});
+	},
+
+	setSetpoint: function() {
+		ajaxSetSetpoint({
+			deviceIndex: this.props.deviceIndex,
+			setPoint: parseFloat(this.setpointInput.value)
+		}).done((result) => {
+			this.setState(result);
+			$(this.bsModal).modal('hide');
+		});
+	},
+
+	render: function() {		
+		return (
+			<div className="modal fade" tabindex="-1" role="dialog" ref={(ref) => this.bsModal = ref}>
+			  <div className="modal-dialog modal-sm">
+			    <div className="modal-content">
+			      <div className="modal-header">
+			        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 className="modal-title text-center">{this.props.deviceName}</h4>
+			      </div>
+			      <div className="modal-body">
+			        <p>New Set Point:</p>
+			        <input type="number" className="form-control input-lg" ref={(ref) => this.setpointInput = ref} />
+			      </div>
+			      <div className="modal-footer">
+			        <button type="button" className="btn btn-default btn-lg" data-dismiss="modal">Cancel</button>
+			        <button type="button" className="btn btn-primary btn-lg" onClick={this.setSetpoint}>Set</button>
+			      </div>
+			    </div>
+			  </div>
 			</div>
 		);
 	}

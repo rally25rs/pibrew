@@ -14,7 +14,8 @@ const defaults = Object.freeze({
 	verbose: false,
 	log: 'logs/pid.csv',
 	maxIntegralIterations: 4,
-	overshootEstimate: 0
+	overshootMax: 0,
+	overshootPerPoll: 0
 });
 
 module.exports = class {
@@ -25,8 +26,10 @@ module.exports = class {
 		this._differentialPrevious = undefined;
 		this._temperatureReader = temperatureReader;
 		this._dataLogger = new DataLogger(this._configuration.log);
+		this._overshootEstimate = 0;
 		this.setPoint = setPoint;
-		this.preventOvershoot = this._configuration.overshootEstimate > 0;
+		this.overshootSetPoint = setPoint;
+		this._preventOvershoot = this._configuration.overshootMax > 0;
 		this.previousPosition = undefined;
 	}
 
@@ -36,19 +39,12 @@ module.exports = class {
 
 	update() {
 		var position = this._temperatureReader.temperature(this._configuration.tempSensorId, { parser: 'preciseDecimal' });
-		var overshootSetPoint = this.setPoint - this._configuration.overshootEstimate;
-		var error = (this.preventOvershoot ? overshootSetPoint : this.setPoint) - position;
+		this.overshootSetPoint = this._preventOvershoot ? (this.overshootSetPoint - this._configuration.overshootPerPoll) : this.setPoint;
+		var error = this.overshootSetPoint - position;
 
 		var proportionalComponent = this._proportional(error);
 		var integralComponent = this._integral(error);
 		var differentialComponent = this._differential(error);
-
-		if(this.previousPosition === undefined) {
-			this.previousPosition = position;
-		}
-		if((position > overshootSetPoint && position < this.previousPosition) || position > this.setPoint) {
-			this.preventOvershoot = false;
-		}
 
 		this.value = proportionalComponent + integralComponent + differentialComponent;
 
@@ -58,8 +54,8 @@ module.exports = class {
 		this._dataLogger.write({
 			time: this._dataLogger.now(),
 			setPoint: this.setPoint,
-			preventOvershoot: this.preventOvershoot,
-			overshootSetPoint: overshootSetPoint,
+			preventOvershoot: this._preventOvershoot,
+			overshootSetPoint: this.overshootSetPoint,
 			error: error,
 			position: position,
 			proportional: proportionalComponent,
@@ -68,13 +64,27 @@ module.exports = class {
 			output: this.value
 		});
 
+		if(this.previousPosition === undefined) {
+			this.previousPosition = position;
+		}
+
+		if(this._preventOvershoot) {
+			if((position > this.overshootSetPoint && position < this.previousPosition) || position > this.setPoint) {
+				this._preventOvershoot = false;
+			}			
+		} else {
+			if(this.value > 0) {
+				this._preventOvershoot = true;
+			}			
+		}
+
 		this.previousPosition = position;
 		return this.value;
 	}
 
 	setPoint(value) {
 		this.setPoint = value;
-		this.preventOvershoot = this._configuration.overshootEstimate > 0;
+		this._preventOvershoot = this._overshootEstimate > 0;
 	}
 
 	stop() {

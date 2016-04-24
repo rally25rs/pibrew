@@ -111,14 +111,15 @@ describe('PID Controller', function() {
 	});
 
 	describe('preventOvershoot', function() {
-		function makePreventOvershootConfiguration(overshootEstimate) {
+		function makePreventOvershootConfiguration(overshootMax) {
 			return {
 				tempSensorId: 'test',
 				proportionalGain: 1,
 				integralGain: 1,
 				differentialGain: 1,
 				preventOvershoot: true,
-				overshootEstimate: overshootEstimate
+				overshootMax: overshootMax,
+				overshootPerPoll: 1
 			};
 		}
 
@@ -141,7 +142,7 @@ describe('PID Controller', function() {
 			pid.update();
 			pid.update();
 
-			expect(pid.preventOvershoot).to.be.true;
+			expect(pid._preventOvershoot).to.be.true;
 		});
 
 		it('stays on if below overshoot setpoint and temp falling', function() {
@@ -149,7 +150,7 @@ describe('PID Controller', function() {
 			pid.update();
 			pid.update();
 
-			expect(pid.preventOvershoot).to.be.true;
+			expect(pid._preventOvershoot).to.be.true;
 		});
 
 		it('stays on if between overshoot setpoint and config setpoint and temp rising', function() {
@@ -157,15 +158,16 @@ describe('PID Controller', function() {
 			pid.update();
 			pid.update();
 
-			expect(pid.preventOvershoot).to.be.true;
+			expect(pid._preventOvershoot).to.be.true;
 		});
 
 		it('turns off if between overshoot setpoint and config setpoint and temp falling', function() {
-			var pid = new Pid(10, makeMockTempReader([7, 6]), makePreventOvershootConfiguration(5));
+			var pid = new Pid(10, makeMockTempReader([9, 9.5, 9]), makePreventOvershootConfiguration(5));
+			pid.update();
 			pid.update();
 			pid.update();
 
-			expect(pid.preventOvershoot).to.be.false;
+			expect(pid._preventOvershoot).to.be.false;
 		});
 
 		it('turns off if temp rises above setpoint', function() {
@@ -174,7 +176,7 @@ describe('PID Controller', function() {
 			pid.update();
 			pid.update();
 
-			expect(pid.preventOvershoot).to.be.false;
+			expect(pid._preventOvershoot).to.be.false;
 		});
 	});
 });

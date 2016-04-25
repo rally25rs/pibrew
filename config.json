@@ -14,7 +14,8 @@
 			"proportionalGain": 0.4,
 			"integralGain": 0.1,
 			"differentialGain": 8,
-			"overshootEstimate": 8,
+			"overshootMax": 8,
+			"overshootPerPoll": 0.17
 			"log": "logs/HLT-Pid.csv",
 			"verbose": false
 		},
@@ -33,7 +34,6 @@
 			"proportionalGain": 0.4,
 			"integralGain": 0.1,
 			"differentialGain": 8,
-			"overshootEstimate": 8,
 			"log": "logs/MLT-Pid.csv",
 			"verbose": false
 		},

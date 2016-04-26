@@ -15,7 +15,7 @@
 			"integralGain": 0.1,
 			"differentialGain": 8,
 			"overshootMax": 8,
-			"overshootPerPoll": 0.17
+			"overshootPerPoll": 0.17,
 			"log": "logs/HLT-Pid.csv",
 			"verbose": false
 		},

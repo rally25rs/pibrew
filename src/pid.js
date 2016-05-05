@@ -8,14 +8,23 @@ const INTEGRAL_SUM_MAX = 2;
 
 const defaults = Object.freeze({
 	tempSensorId: undefined,
-	proportionalGain: 0,
-	integralGain: 0,
-	differentialGain: 0,
 	verbose: false,
 	log: 'logs/pid.csv',
 	maxIntegralIterations: 4,
-	overshootMax: 0,
-	overshootPerPoll: 0
+	heating: {
+		proportionalGain: 0,
+		integralGain: 0,
+		differentialGain: 0,
+		overshootMax: 0,
+		overshootPerPoll: 0
+	},
+	cooling: {
+		proportionalGain: 0,
+		integralGain: 0,
+		differentialGain: 0,
+		overshootMax: 0,
+		overshootPerPoll: 0
+	}
 });
 
 module.exports = class {
@@ -39,12 +48,15 @@ module.exports = class {
 
 	update() {
 		var position = this._temperatureReader.temperature(this._configuration.tempSensorId, { parser: 'preciseDecimal' });
-		var error = this.overshootSetPoint - position;
-		var proportionalComponent = this._proportional(error);
-		var integralComponent = this._integral(error);
-		var differentialComponent = this._differential(error);
+		var config = this.error >= 0 ? this._configuration.heating : this._configuration.cooling;
+		var overshootSetPoint = this.setPoint - config.overshootEstimate;
+		var error = (this.preventOvershoot ? overshootSetPoint : this.setPoint) - position;
 
-		this._updateOvershootSetpoint();
+		var proportionalComponent = this._proportional(error, config);
+		var integralComponent = this._integral(error, config);
+		var differentialComponent = this._differential(error, config);
+
+		this._updateOvershootSetpoint(config);
 
 		this.value = proportionalComponent + integralComponent + differentialComponent;
 
@@ -91,12 +103,12 @@ module.exports = class {
 		this._dataLogger.stop();
 	}
 
-	_proportional(error) {
-		return this._configuration.proportionalGain * error;
+	_proportional(error, config) {
+		return config.proportionalGain * error;
 	}
 
-	_integral(error) {
-		var scaledError = error * this._configuration.integralGain;
+	_integral(error, config) {
+		var scaledError = error * config.integralGain;
 		this._integratorIterations.push(scaledError);
 		if(this._integratorIterations.length > this._configuration.maxIntegralIterations) {
 			this._integratorIterations.shift();
@@ -116,24 +128,24 @@ module.exports = class {
 		return _integratorSum;
 	}
 
-	_differential(error) {
+	_differential(error, config) {
 		var differentialComponent;
 
 		if(this._differentialPrevious === undefined) {
 			this._differentialPrevious = error;
 		}
 
-		differentialComponent = (this._configuration.differentialGain * (this._differentialPrevious - error)) * -1;
+		differentialComponent = (config.differentialGain * (this._differentialPrevious - error)) * -1;
 
 		this._differentialPrevious = error;
 		return differentialComponent;
 	}
 
-	_updateOvershootSetpoint() {
+	_updateOvershootSetpoint(config) {
 		var overshootSetpointDelta = this.setPoint - this.overshootSetPoint;
 
-		if(this._preventOvershoot && overshootSetpointDelta < this._configuration.overshootMax) {
-			this.overshootSetPoint = this.overshootSetPoint - this._configuration.overshootPerPoll;
+		if(this._preventOvershoot && overshootSetpointDelta < config.overshootMax) {
+			this.overshootSetPoint = this.overshootSetPoint - config.overshootPerPoll;
 		} else {
 			this.overshootSetPoint = this.setPoint;
 		}

@@ -11,13 +11,21 @@
 		"verbose": false,
 		"pid": {
 			"tempSensorId": "28-011564c2ffff",
-			"proportionalGain": 0.4,
-			"integralGain": 0.1,
-			"differentialGain": 8,
-			"overshootMax": 8,
-			"overshootPerPoll": 0.17,
+			"maxIntegralIterations": 6,
 			"log": "logs/HLT-Pid.csv",
-			"verbose": false
+			"verbose": false,
+			"heating": {
+				"proportionalGain": 0.4,
+				"integralGain": 0.1,
+				"differentialGain": 10,
+				"overshootEstimate": 8,
+				"overshootPerPoll": 0.17
+			},
+			"cooling": {
+				"proportionalGain": 1,
+				"integralGain": 0.1,
+				"differentialGain": 1,
+			}
 		},
 		"relay": {
 			"gpioPin": 22,
@@ -31,11 +39,18 @@
 		"verbose": false,
 		"pid": {
 			"tempSensorId": "28-011564dfa5ff",
-			"proportionalGain": 0.4,
-			"integralGain": 0.1,
-			"differentialGain": 8,
 			"log": "logs/MLT-Pid.csv",
-			"verbose": false
+			"verbose": false,
+			"heating": {
+				"proportionalGain": 0.2,
+				"integralGain": 0.2,
+				"differentialGain": 1,
+			},
+			"cooling": {
+				"proportionalGain": 0.2,
+				"integralGain": 0.2,
+				"differentialGain": 1,
+			}
 		},
 		"relay": {
 			"gpioPin": 17,

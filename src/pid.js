@@ -50,7 +50,7 @@ module.exports = class {
 		var config = position < this.setPoint ? this._configuration.heating : this._configuration.cooling;
 		this._updateOvershootSetpoint(config);
 
-		var error = (this.preventOvershoot ? this.overshootSetPoint : this.setPoint) - position;
+		var error = this.overshootSetPoint - position;
 
 		var proportionalComponent = this._proportional(error, config);
 		var integralComponent = this._integral(error, config);

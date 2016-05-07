@@ -148,7 +148,7 @@ module.exports = class {
 	_updateOvershootSetpoint(config) {
 		var overshootSetpointDelta = this.setPoint - this.overshootSetPoint;
 
-		if(this._preventOvershoot && overshootSetpointDelta < config.overshootMax) {
+		if(this._preventOvershoot && overshootSetpointDelta <= config.overshootMax) {
 			this.overshootSetPoint = this.overshootSetPoint - config.overshootPerPoll;
 		} else {
 			this.overshootSetPoint = this.setPoint;

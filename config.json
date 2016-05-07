@@ -24,7 +24,7 @@
 			"cooling": {
 				"proportionalGain": 1,
 				"integralGain": 0.1,
-				"differentialGain": 1,
+				"differentialGain": 1
 			}
 		},
 		"relay": {
@@ -44,12 +44,12 @@
 			"heating": {
 				"proportionalGain": 0.2,
 				"integralGain": 0.2,
-				"differentialGain": 1,
+				"differentialGain": 1
 			},
 			"cooling": {
 				"proportionalGain": 0.2,
 				"integralGain": 0.2,
-				"differentialGain": 1,
+				"differentialGain": 1
 			}
 		},
 		"relay": {

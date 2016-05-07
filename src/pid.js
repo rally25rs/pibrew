@@ -47,7 +47,7 @@ module.exports = class {
 
 	update() {
 		var position = this._temperatureReader.temperature(this._configuration.tempSensorId, { parser: 'preciseDecimal' });
-		var config = this.error >= 0 ? this._configuration.heating : this._configuration.cooling;
+		var config = position < this.setPoint ? this._configuration.heating : this._configuration.cooling;
 		this._updateOvershootSetpoint(config);
 
 		var error = (this.preventOvershoot ? this.overshootSetPoint : this.setPoint) - position;
@@ -148,7 +148,7 @@ module.exports = class {
 	_updateOvershootSetpoint(config) {
 		var overshootSetpointDelta = this.setPoint - this.overshootSetPoint;
 
-		if(this._preventOvershoot && overshootSetpointDelta <= config.overshootMax) {
+		if(this._preventOvershoot && overshootSetpointDelta < config.overshootMax) {
 			this.overshootSetPoint = this.overshootSetPoint - config.overshootPerPoll;
 		} else {
 			this.overshootSetPoint = this.setPoint;

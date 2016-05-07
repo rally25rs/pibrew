@@ -51,10 +51,11 @@ module.exports = class {
 		this._updateOvershootSetpoint(config);
 
 		var error = this.overshootSetPoint - position;
+		var realError = this.setPoint - position;
 
 		var proportionalComponent = this._proportional(error, config);
 		var integralComponent = this._integral(error, config);
-		var differentialComponent = this._differential(error, config);
+		var differentialComponent = this._differential(realError, config);
 
 
 		this.value = proportionalComponent + integralComponent + differentialComponent;

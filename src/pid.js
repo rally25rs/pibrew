@@ -48,14 +48,14 @@ module.exports = class {
 	update() {
 		var position = this._temperatureReader.temperature(this._configuration.tempSensorId, { parser: 'preciseDecimal' });
 		var config = this.error >= 0 ? this._configuration.heating : this._configuration.cooling;
-		var overshootSetPoint = this.setPoint - config.overshootEstimate;
-		var error = (this.preventOvershoot ? overshootSetPoint : this.setPoint) - position;
+		this._updateOvershootSetpoint(config);
+
+		var error = (this.preventOvershoot ? this.overshootSetPoint : this.setPoint) - position;
 
 		var proportionalComponent = this._proportional(error, config);
 		var integralComponent = this._integral(error, config);
 		var differentialComponent = this._differential(error, config);
 
-		this._updateOvershootSetpoint(config);
 
 		this.value = proportionalComponent + integralComponent + differentialComponent;
 
@@ -82,6 +82,7 @@ module.exports = class {
 		if(this._preventOvershoot) {
 			if((position > this.overshootSetPoint && position < this.previousPosition) || position > this.setPoint) {
 				this._preventOvershoot = false;
+				this._differentialPrevious = undefined;
 			}			
 		} else {
 			if(this.value > 0) {
@@ -99,6 +100,7 @@ module.exports = class {
 		this._preventOvershoot = true;
 		this.previousPosition = undefined;
 		this._integratorIterations = [];
+		this._differentialPrevious = undefined;
 	}
 
 	stop() {

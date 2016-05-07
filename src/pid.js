@@ -35,10 +35,9 @@ module.exports = class {
 		this._differentialPrevious = undefined;
 		this._temperatureReader = temperatureReader;
 		this._dataLogger = new DataLogger(this._configuration.log);
-		this._overshootEstimate = 0;
 		this.setPoint = setPoint;
 		this.overshootSetPoint = setPoint;
-		this._preventOvershoot = this._configuration.overshootMax > 0;
+		this._preventOvershoot = true;
 		this.previousPosition = undefined;
 	}
 
@@ -96,7 +95,10 @@ module.exports = class {
 
 	setPoint(value) {
 		this.setPoint = value;
-		this._preventOvershoot = this._overshootEstimate > 0;
+		this.overshootSetPoint = value;
+		this._preventOvershoot = true;
+		this.previousPosition = undefined;
+		this._integratorIterations = [];
 	}
 
 	stop() {

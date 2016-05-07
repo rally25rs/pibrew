@@ -18,7 +18,7 @@
 				"proportionalGain": 0.4,
 				"integralGain": 0.1,
 				"differentialGain": 10,
-				"overshootEstimate": 8,
+				"overshootMax": 8,
 				"overshootPerPoll": 0.17
 			},
 			"cooling": {

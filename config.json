@@ -2,13 +2,14 @@
 	"env": "dev",
 	"poll": 5000,
 	"web": {
-		"port": 8080
+		"port": 80
 	},
 	"devices": [{
 		"name": "Hot Liquor Tank",
 		"setPoint": 100,
 		"setPointRange": 0.2,
 		"verbose": false,
+		"initialMode": "off",
 		"pid": {
 			"tempSensorId": "28-011564c2ffff",
 			"maxIntegralIterations": 6,
@@ -37,6 +38,7 @@
 		"setPoint": 100,
 		"setPointRange": 0.5,
 		"verbose": false,
+		"initialMode": "off",
 		"pid": {
 			"tempSensorId": "28-011564dfa5ff",
 			"log": "logs/MLT-Pid.csv",

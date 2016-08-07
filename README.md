@@ -25,3 +25,28 @@ For relay circut, see:
 (http://www.raspberrypi-spy.co.uk/2012/06/control-led-using-gpio-output-pin/)[http://www.raspberrypi-spy.co.uk/2012/06/control-led-using-gpio-output-pin/]
 
 Uses a BC547B NPN transistor and a 22K resistor.
+
+== Pi Setup
+
+Had to turn off wifi adapter power management to prevent the network connection from sleeping after a long idle period:
+[http://raspberrypi.stackexchange.com/questions/1384/how-do-i-disable-suspend-mode/4518#4518](http://raspberrypi.stackexchange.com/questions/1384/how-do-i-disable-suspend-mode/4518#4518)
+
+```
+cat /sys/module/8192cu/parameters/rtw_power_mgnt
+```
+
+A value of 0 means disabled, 1 means min. power management, 2 means max. power management. To disable this, you need to create a new file:
+
+```
+sudo nano /etc/modprobe.d/8192cu.conf
+```
+
+and add the following:
+
+```
+# Disable power management
+
+options 8192cu rtw_power_mgnt=0
+```
+
+Once you save the file and reboot your RPi, the WiFi should stay on indefinitely.

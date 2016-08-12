@@ -1,4 +1,4 @@
 sudo: false
-language: "5"
+language: "node"
 node_js:
-  - "node"
+  - "5"

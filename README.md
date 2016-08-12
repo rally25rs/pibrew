@@ -1,4 +1,6 @@
-== Pins
+[![Build Status](https://travis-ci.org/rally25rs/pibrew.svg?branch=master)](https://travis-ci.org/rally25rs/pibrew)
+
+## Pins
 
 To determine the GPIO Pin number to put in `config.json` see:
 
@@ -6,7 +8,7 @@ To determine the GPIO Pin number to put in `config.json` see:
 
 (http://elinux.org/images/archive/5/5c/20150701194103%21Pi-GPIO-header.png)[http://elinux.org/images/archive/5/5c/20150701194103%21Pi-GPIO-header.png]
 
-== Temp Sensors
+## Temp Sensors
 
 To get sensor IDs, use the command:
 
@@ -16,7 +18,7 @@ ls -l /sys/bus/w1/devices/
 
 One 4.7k resistor is used as a pull-up.
 
-== Relays
+## Relays
 
 For relay circut, see:
 
@@ -26,7 +28,7 @@ For relay circut, see:
 
 Uses a BC547B NPN transistor and a 22K resistor.
 
-== Pi Setup
+## Pi Setup
 
 Had to turn off wifi adapter power management to prevent the network connection from sleeping after a long idle period:
 [http://raspberrypi.stackexchange.com/questions/1384/how-do-i-disable-suspend-mode/4518#4518](http://raspberrypi.stackexchange.com/questions/1384/how-do-i-disable-suspend-mode/4518#4518)

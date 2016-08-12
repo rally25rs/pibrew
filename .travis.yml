@@ -1,0 +1,4 @@
+sudo: false
+language: "5"
+node_js:
+  - "node"

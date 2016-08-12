@@ -170,4 +170,44 @@ describe('DeviceController', () => {
 			expect(deviceController._relayController.mode()).to.equal('off');
 		});
 	});
+
+	describe('writeConfig', function() {
+		beforeEach(function() {
+			const deviceConfiguration = {
+				setPoint: 100,
+				setPointRange: 0,
+				pid: {},
+				relay: {
+					gpio: gpio,
+					gpioPin: 17
+				},
+				mockTemperatureReader: mockTemperatureReader,
+				initialMode: 'auto'
+			};
+
+			const mockPid = function() {
+				return {
+					update: function() { return 1; },
+					setSetpoint: function() {}
+				};
+			};
+
+			const DeviceController = proxyquire('../src/device-controller', {
+				'./pid': mockPid
+			});
+
+			this.deviceController = new DeviceController(deviceConfiguration);
+		});
+
+
+		it('includes changed setPoint', function() {
+			this.deviceController.setSetpoint(123);
+			expect(this.deviceController.writeConfig().setPoint).to.equal(123);
+		});
+
+		it('includes changed initialMode', function() {
+			this.deviceController.setMode('on');
+			expect(this.deviceController.writeConfig().initialMode).to.equal('on');
+		});
+	});
 });

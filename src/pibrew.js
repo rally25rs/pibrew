@@ -59,7 +59,7 @@ function deleteSessionConfig() {
 	try {
 		fs.unlinkSync(SESSION_CONFIG_FILE);
 	} catch (e) {
-		// ignoring exception.
+		// ignoring exception, because I hate error handling.
 	}
 }
 

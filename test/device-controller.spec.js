@@ -43,7 +43,7 @@ describe('DeviceController', () => {
 			const deviceController = new DeviceController(deviceConfiguration);
 			expect(deviceController._relayController.mode()).to.equal('off');
 			deviceController.update();
-			expect(deviceController._relayController.mode()).to.equal('on');
+			expect(deviceController._relayController.mode()).to.equal('OH NO');
 		});
 
 		it('disables relay if pid reports lower than 0', () => {

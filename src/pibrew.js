@@ -25,6 +25,7 @@ function _initializeDevice(deviceConfig) {
 
 function _updateDevices() {
 	devices.forEach((device) => device.update());
+	web.emitUpdate();
 }
 
 function getStatus() {

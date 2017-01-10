@@ -3,6 +3,7 @@
 const _ = require('lodash');
 const koa = require('koa');
 const Router = require('koa-router');
+const socketIo = require('socket.io');
 var bodyParser = require('koa-bodyparser');
 
 const defaults = Object.freeze({
@@ -15,6 +16,13 @@ var _getStatusFunction;
 var _httpServer;
 var _updateDeviceModeFunction;
 var _updateDeviceSetpointFunction;
+var _io;
+
+function onSocketConnection(socket) {
+	socket.on('setSetpoint', apiSetSetpointRequest);
+	socket.on('setMode', apiSetModeRequest);
+	socket.emit('update', JSON.stringify(_getStatusFunction()));
+}
 
 exports.init = function(configuration, getStatusFunction, updateDeviceModeFunction, updateDeviceSetpointFunction) {
 	_configuration = _.extend({}, defaults, configuration);
@@ -25,43 +33,33 @@ exports.init = function(configuration, getStatusFunction, updateDeviceModeFuncti
 };
 
 exports.start = function() {
-	const router = new Router();
-	router.get('/api/status', apiUpdateMiddleware);
-	router.put('/api/mode', apiSetModeMiddleware);
-	router.put('/api/setpoint', apiSetSetpointMiddleware);
-
 	_app.use(require('koa-static')('src/ui'));
 	_app.use(bodyParser());
-	_app.use(router.middleware());
 	_httpServer = _app.listen(_configuration.port);
 	_httpServer.setTimeout(2000);
+	_io = socketIo(_httpServer);
+
+	_io.on('connection', onSocketConnection);
 };
 
 exports.stop = function() {
 	_httpServer.close();
 };
 
-function *apiUpdateMiddleware(next) {
-	yield next;
-	this.response.body = JSON.stringify(_getStatusFunction());
-}
+exports.emitUpdate = function() {
+	_io.emit('update', JSON.stringify(_getStatusFunction()));
+};
 
-function *apiSetModeMiddleware(next) {
-	const deviceIndex = this.request.body.deviceIndex;
-	const mode = this.request.body.mode;
-
-	yield next;
+function apiSetModeRequest(req) {
+	const {deviceIndex, mode} = JSON.parse(req);
 
 	_updateDeviceModeFunction(deviceIndex, mode);
-	this.response.body = JSON.stringify(_getStatusFunction());
+	exports.emitUpdate();
 }
 
-function *apiSetSetpointMiddleware(next) {
-	const deviceIndex = this.request.body.deviceIndex;
-	const setPoint = this.request.body.setPoint;
-
-	yield next;
+function apiSetSetpointRequest(req) {
+	const {deviceIndex, setPoint} = JSON.parse(req);
 
 	_updateDeviceSetpointFunction(deviceIndex, setPoint);
-	this.response.body = JSON.stringify(_getStatusFunction());
+	exports.emitUpdate();
 }

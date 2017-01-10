@@ -1,37 +1,5 @@
 'use strict';
 
-function ajaxUpdateStatus() {
-	return $.ajax({
-		url: '/api/status',
-		type: 'GET',
-		dataType: 'json'
-	}).fail(function(jqXHR) {
-		console.error('unable to get data', jqXHR);
-	});
-}
-
-function ajaxSetMode(data) {
-	return $.ajax({
-		url: '/api/mode',
-		type: 'PUT',
-		dataType: 'json',
-		data: data
-	}).fail(function(jqXHR) {
-		console.error('unable to get data', jqXHR);
-	});
-}
-
-function ajaxSetSetpoint(data) {
-	return $.ajax({
-		url: '/api/setpoint',
-		type: 'PUT',
-		dataType: 'json',
-		data: data
-	}).fail(function(jqXHR) {
-		console.error('unable to get data', jqXHR);
-	});
-}
-
 const DeviceList = React.createClass({
 	getInitialState: function() {
 		return {
@@ -40,24 +8,16 @@ const DeviceList = React.createClass({
 	},
 
 	componentDidMount: function() {
-		this.updateStatus();
-	},
-
-	updateStatus: function() {
-		ajaxUpdateStatus().done((result) => {
-			this.setState(result);
-		}).always(() => {
-			setTimeout(this.updateStatus, 1000);
+		_io.on('update', (data) => {
+		    this.setState(JSON.parse(data));
 		});
 	},
 
 	setMode: function(deviceIndex, mode) {
-		ajaxSetMode({
+		_io.emit('setMode', JSON.stringify({
 			deviceIndex: deviceIndex,
 			mode: mode
-		}).done((result) => {
-			this.setState(result);
-		});
+		}));
 	},
 
 	render: function() {
@@ -144,13 +104,11 @@ const SetpointModal = React.createClass({
 	},
 
 	setSetpoint: function() {
-		ajaxSetSetpoint({
+		_io.emit('setSetpoint', JSON.stringify({
 			deviceIndex: this.props.deviceIndex,
 			setPoint: parseFloat(this.setpointInput.value)
-		}).done((result) => {
-			this.setState(result);
-			$(this.bsModal).modal('hide');
-		});
+		}));
+		$(this.bsModal).modal('hide');
 	},
 
 	render: function() {		
@@ -178,6 +136,8 @@ const SetpointModal = React.createClass({
 });
 
 var devices = [{name: 'one'}, {name: 'two'}];
+
+const _io = io();
 
 ReactDOM.render(
 	<div className="container-fluid">

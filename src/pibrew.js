@@ -38,7 +38,11 @@ function getStatus() {
 
 function readSessionConfig() {
 	try {
-		return JSON.parse(fs.readFileSync(SESSION_CONFIG_FILE, { encoding: 'utf8' }));
+		if (fs.existsSync(SESSION_CONFIG_FILE))
+		{
+			return JSON.parse(fs.readFileSync(SESSION_CONFIG_FILE, { encoding: 'utf8' }));
+		}
+		return {};
 	} catch (e) {
 		console.error(e);
 	}
@@ -50,7 +54,7 @@ function writeSessionConfig() {
 	});
 
 	try {
-		fs.writeFile(SESSION_CONFIG_FILE, JSON.stringify(sessionConfig));
+		fs.writeFile(SESSION_CONFIG_FILE, JSON.stringify(sessionConfig), () => {});
 	} catch (e) {
 		console.error(e);
 	}

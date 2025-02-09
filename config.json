@@ -2,7 +2,7 @@
 	"env": "dev",
 	"poll": 5000,
 	"web": {
-		"port": 80
+		"port": 8080
 	},
 	"devices": [{
 		"name": "Hot Liquor Tank",

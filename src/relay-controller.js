@@ -37,11 +37,11 @@ module.exports = class {
 	}
 
 	start() {
-		this._configuration.gpio.export(this._configuration.gpioPin, 'out');
+		this._configuration.gpio.setup(this._configuration.gpioPin, this._configuration.gpio.DIR_OUT);
 	}
 
 	stop() {
-		this._configuration.gpio.unexport(this._configuration.gpioPin);
+		this._configuration.gpio.destroy();
 		this._dataLogger.stop();
 	}
 

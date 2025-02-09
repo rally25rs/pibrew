@@ -11,7 +11,7 @@
 		"verbose": false,
 		"initialMode": "off",
 		"pid": {
-			"tempSensorId": "28-011564c2ffff",
+			"tempSensorId": "28-011564e178ff",
 			"maxIntegralIterations": 6,
 			"log": "logs/HLT-Pid.csv",
 			"verbose": false,

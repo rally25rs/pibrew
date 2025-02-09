@@ -10,6 +10,19 @@ To determine the GPIO Pin number to put in `config.json` see:
 
 ## Temp Sensors
 
+Enable 1wire following the guide:
+https://www.circuitbasics.com/raspberry-pi-ds18b20-temperature-sensor-tutorial/
+
+```
+sudo nano /boot/firmware/config.txt
+```
+
+add
+
+```
+dtoverlay=w1-gpio
+```
+
 To get sensor IDs, use the command:
 
 ```
@@ -30,14 +43,16 @@ Uses a BC547B NPN transistor and a 22K resistor.
 
 ## Pi Setup
 
-Had to turn off wifi adapter power management to prevent the network connection from sleeping after a long idle period:
+Had to turn off wifi adapter power management to prevent the network connection
+from sleeping after a long idle period:
 [http://raspberrypi.stackexchange.com/questions/1384/how-do-i-disable-suspend-mode/4518#4518](http://raspberrypi.stackexchange.com/questions/1384/how-do-i-disable-suspend-mode/4518#4518)
 
 ```
 cat /sys/module/8192cu/parameters/rtw_power_mgnt
 ```
 
-A value of 0 means disabled, 1 means min. power management, 2 means max. power management. To disable this, you need to create a new file:
+A value of 0 means disabled, 1 means min. power management, 2 means max. power
+management. To disable this, you need to create a new file:
 
 ```
 sudo nano /etc/modprobe.d/8192cu.conf
@@ -51,4 +66,5 @@ and add the following:
 options 8192cu rtw_power_mgnt=0
 ```
 
-Once you save the file and reboot your RPi, the WiFi should stay on indefinitely.
+Once you save the file and reboot your RPi, the WiFi should stay on
+indefinitely.

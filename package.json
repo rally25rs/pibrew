@@ -19,26 +19,22 @@
   },
   "homepage": "https://github.com/rally25rs/pibrew#readme",
   "dependencies": {
-    "ds18b20": "https://github.com/rally25rs/ds18b20.git#preciseDecimal",
-    "fast-csv": "^1.1.0",
-    "koa": "^1.2.0",
-    "koa-bodyparser": "^2.0.1",
-    "koa-router": "^5.4.0",
-    "koa-static": "^2.0.0",
+    "ds18b20": "github:rally25rs/ds18b20#preciseDecimal",
+    "fast-csv": "^1.2.0",
+    "koa": "^1.7.0",
+    "koa-bodyparser": "^2.5.0",
+    "koa-router": "^5.4.2",
+    "koa-static": "^2.1.0",
     "lodash": "^3.10.1",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.8",
     "node-libgpiod": "^0.4.6",
-    "socket.io": "^1.7.2"
+    "socket.io": "^1.7.4"
   },
   "devDependencies": {
-    "chai": "^3.4.1",
-    "grunt": "^0.4.5",
-    "grunt-contrib-jshint": "^0.11.3",
-    "grunt-koa": "^1.0.0",
-    "grunt-mocha-test": "^0.12.7",
-    "mocha": "^2.3.4",
-    "proxyquire": "^1.7.3",
-    "sinon": "^1.17.2",
-    "sinon-chai": "^2.8.0"
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3",
+    "proxyquire": "^1.8.0",
+    "sinon": "^1.17.7",
+    "sinon-chai": "^2.14.0"
   }
 }

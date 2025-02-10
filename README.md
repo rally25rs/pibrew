@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/rally25rs/pibrew.svg?branch=master)](https://travis-ci.org/rally25rs/pibrew)
-
 ## Pins
 
 To determine the GPIO Pin number to put in `config.json` see:
@@ -33,7 +31,7 @@ One 4.7k resistor is used as a pull-up.
 
 ## Relays
 
-For relay circut, see:
+For relay circuit, see:
 
 (http://www.susa.net/wordpress/2012/06/raspberry-pi-relay-using-gpio/)[http://www.susa.net/wordpress/2012/06/raspberry-pi-relay-using-gpio/]
 
@@ -69,15 +67,12 @@ options 8192cu rtw_power_mgnt=0
 Once you save the file and reboot your RPi, the WiFi should stay on
 indefinitely.
 
-# install NodeJS
-
-tbd
-
 # install libraries for native GPIO
 
 ```
 sudo apt install gpiod libgpiod2 libgpiod-dev libnode-dev
 ```
 
-before `npm install`
+# install NodeJS
 
+https://github.com/nodesource/distributions?tab=readme-ov-file#installation-instructions-deb

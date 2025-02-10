@@ -13,7 +13,10 @@
 		"pid": {
 			"tempSensorId": "28-011564e178ff",
 			"maxIntegralIterations": 6,
-			"log": "logs/HLT-Pid.csv",
+			"log": {
+				"path": "logs/HLT-Pid.csv",
+				"enabled": false
+			},
 			"verbose": false,
 			"heating": {
 				"proportionalGain": 0.4,
@@ -30,7 +33,11 @@
 		},
 		"relay": {
 			"gpioPin": 22,
-			"log": "logs/HLT-Relay.csv",
+			"log": {
+				"path": "logs/HLT-Relay.csv",
+				"enabled": false
+			},
+
 			"verbose": false
 		}
 	}, {
@@ -41,7 +48,10 @@
 		"initialMode": "off",
 		"pid": {
 			"tempSensorId": "28-011564dfa5ff",
-			"log": "logs/MLT-Pid.csv",
+			"log": {
+				"path": "logs/MLT-Pid.csv",
+				"enabled": false
+			},
 			"verbose": false,
 			"heating": {
 				"proportionalGain": 0.2,
@@ -56,7 +66,10 @@
 		},
 		"relay": {
 			"gpioPin": 17,
-			"log": "logs/MLT-Relay.csv",
+			"log": {
+				"path": "logs/MLT-Relay.csv",
+				"enabled": false
+			},
 			"verbose": false
 		}
 	}]

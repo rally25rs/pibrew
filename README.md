@@ -68,3 +68,16 @@ options 8192cu rtw_power_mgnt=0
 
 Once you save the file and reboot your RPi, the WiFi should stay on
 indefinitely.
+
+# install NodeJS
+
+tbd
+
+# install libraries for native GPIO
+
+```
+sudo apt install gpiod libgpiod2 libgpiod-dev libnode-dev
+```
+
+before `npm install`
+

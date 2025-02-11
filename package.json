@@ -4,8 +4,8 @@
   "description": "Homebrew Automation for the Raspberry Pi",
   "main": "src/pibrew.js",
   "scripts": {
-    "start": "node ./src/pibrew.js",
-    "prod": "node ./src/pibrew.js --env=prod",
+    "start": "electron .",
+    "prod": "electron . --env=prod",
     "test": "mocha"
   },
   "repository": {
@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "electron": "^34.1.1",
     "mocha": "^2.5.3",
     "proxyquire": "^1.8.0",
     "sinon": "^1.17.7",

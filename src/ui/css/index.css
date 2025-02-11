@@ -12,7 +12,6 @@ body {
 .device {
 	margin: 15px 15px 0 0;
 	padding: 15px;
-	/*background-color: #EBF4FF;*/
 	background-color: #eee;
 	border: 2px solid #ddd;
 	border-radius: 6px;
@@ -79,11 +78,7 @@ body {
 }
 
 .device .active-indicator.on {
-	background: #ec043a; /* Old browsers */
-	background: -moz-radial-gradient(center, ellipse cover, #ec043a 0%, #d70334 44%, #be002c 100%); /* FF3.6-15 */
-	background: -webkit-radial-gradient(center, ellipse cover, #ec043a 0%,#d70334 44%,#be002c 100%); /* Chrome10-25,Safari5.1-6 */
-	background: radial-gradient(ellipse at center, #ec043a 0%,#d70334 44%,#be002c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ec043a', endColorstr='#be002c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	background: #ec043a;
 }
 
 .device .btn-group .btn {

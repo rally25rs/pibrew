@@ -7,6 +7,7 @@ const gpio = require('./pi-gpio-adapter');
 const DeviceController = require('./device-controller');
 const sensorsAdapter = require('./ds18b20-adapter');
 const web = require('./web');
+const electronUi = require('./electron-ui');
 const fs = require('fs');
 
 const SESSION_CONFIG_FILE = 'sessionconfig.json'
@@ -92,6 +93,7 @@ function start() {
 	devices.forEach((device) => device.start());
 	web.init(config.web, getStatus, updateDeviceMode, updateDeviceSetpoint);
 	web.start();
+	electronUi.start(config, exit);
 }
 
 function cleanup() {
@@ -100,13 +102,14 @@ function cleanup() {
 	devices.forEach((device) => device.stop());
 	web.stop();
 	deleteSessionConfig();
+	electronUi.stop();
 }
 
 function exit() {
 	if(!exiting)
 	{
 		cleanup();
-		process.exit(0);
+		// process.exit(0);
 	}
 	exiting = true;
 }

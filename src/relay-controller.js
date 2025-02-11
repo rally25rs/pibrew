@@ -40,7 +40,7 @@ module.exports = class {
 	}
 
 	mode(newMode) {
-		if(newMode) {
+		if(newMode !== undefined && newMode !== this._mode) {
 			this._mode = newMode;
 			this._onModeChanged();
 		}

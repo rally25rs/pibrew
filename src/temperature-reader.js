@@ -40,7 +40,7 @@ module.exports = class {
 		} else {
 			degreesFahrenheit = this._celciusToFahrenheit(value);
 			this._temperatures[id] = degreesFahrenheit;
-			console.log('Temp of sensor [' + id + '] = ' + degreesFahrenheit);
+			// console.log('Temp of sensor [' + id + '] = ' + degreesFahrenheit);
 		}
 	}
 
